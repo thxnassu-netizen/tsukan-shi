@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>通関士試験 学習アプリ ｜ 関太先生</title>
+<style>
+  :root {
+    --primary: #1a5276;
+    --accent: #2980b9;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --warn: #f39c12;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #2c3e50;
+    --muted: #7f8c8d;
+    --border: #dde3ea;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white; padding: 12px 20px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: sticky; top: 0; z-index: 100;
+  }
+  header h1 { font-size: 1.1rem; font-weight: 700; }
+  header span { font-size: 0.75rem; opacity: 0.8; }
+
+  /* ===== TABS ===== */
+  nav.tabs {
+    display: flex; background: var(--primary);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  nav.tabs button {
+    flex: 1; min-width: 72px; padding: 10px 6px;
+    background: none; border: none; color: rgba(255,255,255,0.65);
+    font-size: 0.72rem; cursor: pointer; transition: all 0.2s;
+    border-bottom: 3px solid transparent; white-space: nowrap;
+  }
+  nav.tabs button.active { color: white; border-bottom-color: #f39c12; background: rgba(255,255,255,0.1); }
+  nav.tabs button:hover { color: white; background: rgba(255,255,255,0.08); }
+
+  /* ===== CONTENT ===== */
+  main { padding: 16px; max-width: 720px; margin: 0 auto; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card); border-radius: 12px;
+    padding: 16px; margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .card h2 { font-size: 0.95rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+
+  /* ===== KANTA CHARACTER ===== */
+  .kanta-wrap {
+    display: flex; align-items: flex-end; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .kanta-svg-wrap {
+    flex-shrink: 0;
+    animation: float 3s ease-in-out infinite;
+    background: #f0f4f8;
+    border-radius: 8px;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .speech-bubble {
+    position: relative; background: white; border-radius: 12px;
+    padding: 12px 14px; border: 2px solid var(--accent);
+    font-size: 0.85rem; line-height: 1.6; flex: 1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    min-height: 52px;
+  }
+  .speech-bubble::before {
+    content: ''; position: absolute; left: -12px; bottom: 16px;
+    border: 6px solid transparent; border-right-color: var(--accent);
+  }
+  .speech-bubble::after {
+    content: ''; position: absolute; left: -9px; bottom: 17px;
+    border: 5px solid transparent; border-right-color: white;
+  }
+  .typing { color: var(--muted); font-style: italic; }
+
+  /* ===== STATS ===== */
+  .stats-row { display: flex; gap: 10px; margin-bottom: 14px; }
+  .stat-box {
+    flex: 1; background: var(--card); border-radius: 10px; padding: 14px 10px;
+    text-align: center; border: 1px solid var(--border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .stat-box .num { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+  .stat-box .label { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+  /* ===== DAILY QUESTION ===== */
+  .daily-q { background: linear-gradient(135deg, #eaf4fb, #d6eaf8); border: 1px solid #aed6f1; }
+  .subject-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 600; margin-bottom: 8px;
+    background: var(--accent); color: white;
+  }
+  .q-text { font-size: 0.9rem; line-height: 1.7; margin-bottom: 12px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; }
+  .choice-btn {
+    padding: 10px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+    background: white; text-align: left; cursor: pointer; font-size: 0.84rem;
+    transition: all 0.2s; line-height: 1.5;
+  }
+  .choice-btn:hover { border-color: var(--accent); background: #eaf4fb; }
+  .choice-btn.correct { background: #eafaf1; border-color: var(--success); color: var(--success); font-weight: 600; }
+  .choice-btn.wrong { background: #fdedec; border-color: var(--danger); color: var(--danger); }
+  .choice-btn.disabled { pointer-events: none; }
+
+  /* ===== QUIZ TAB ===== */
+  .subject-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .subject-tab {
+    padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+    background: white; cursor: pointer; font-size: 0.78rem; transition: all 0.2s;
+  }
+  .subject-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+  .btn {
+    padding: 9px 20px; border-radius: 8px; border: none; cursor: pointer;
+    font-size: 0.84rem; font-weight: 600; transition: all 0.2s;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-secondary { background: var(--border); color: var(--text); }
+  .btn-secondary:hover { background: #c8d6df; }
+  .progress-bar-wrap { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 10px; }
+  .progress-bar { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
+  .q-counter { font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
+
+  /* ===== GLOSSARY ===== */
+  .glossary-filters { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--border);
+    background: white; cursor: pointer; font-size: 0.75rem; transition: all 0.2s;
+  }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .term-item {
+    border-bottom: 1px solid var(--border); padding: 12px 4px; cursor: pointer;
+  }
+  .term-item:last-child { border-bottom: none; }
+  .term-header { display: flex; justify-content: space-between; align-items: center; }
+  .term-word { font-weight: 600; font-size: 0.9rem; }
+  .term-tag { font-size: 0.68rem; padding: 2px 8px; border-radius: 10px; background: var(--bg); color: var(--muted); }
+  .term-desc { font-size: 0.82rem; line-height: 1.6; margin-top: 8px; color: #444; display: none; padding: 8px; background: var(--bg); border-radius: 6px; }
+  .term-desc.open { display: block; }
+  .chevron { transition: transform 0.2s; font-size: 0.8rem; color: var(--muted); }
+  .term-item.open .chevron { transform: rotate(180deg); }
+
+  /* ===== LAWS ===== */
+  .law-section { margin-bottom: 10px; }
+  .law-section summary { cursor: pointer; font-weight: 600; padding: 10px; background: #eaf4fb; border-radius: 8px; font-size: 0.88rem; list-style: none; display: flex; justify-content: space-between; }
+  .law-section summary::after { content: '▼'; font-size: 0.7rem; }
+  details[open] .law-section summary::after { content: '▲'; }
+  .law-body { padding: 10px 14px; font-size: 0.82rem; line-height: 1.8; color: #444; }
+  .law-article { margin-bottom: 10px; border-left: 3px solid var(--accent); padding-left: 10px; }
+  .law-article h4 { font-size: 0.8rem; color: var(--primary); margin-bottom: 4px; }
+
+  /* ===== AI CHAT ===== */
+  .chat-messages {
+    height: 320px; overflow-y: auto; padding: 10px;
+    background: var(--bg); border-radius: 8px; margin-bottom: 10px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.84rem; line-height: 1.6; }
+  .msg.user { align-self: flex-end; background: var(--primary); color: white; border-radius: 12px 12px 2px 12px; }
+  .msg.ai { align-self: flex-start; background: white; border: 1px solid var(--border); border-radius: 12px 12px 12px 2px; }
+  .chat-input-row { display: flex; gap: 8px; }
+  .chat-input {
+    flex: 1; padding: 10px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+    font-size: 0.84rem; outline: none; transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--accent); }
+
+  /* ===== MISC ===== */
+  .result-badge {
+    display: inline-block; padding: 4px 14px; border-radius: 20px;
+    font-weight: 700; font-size: 0.9rem; margin-bottom: 8px;
+  }
+  .result-badge.correct { background: #eafaf1; color: var(--success); }
+  .result-badge.wrong { background: #fdedec; color: var(--danger); }
+  .loading { text-align: center; padding: 20px; color: var(--muted); }
+  .dot-blink::after { content: '…'; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* PNG character states */
+  .kanta-img {
+    height: 180px;
+    width: auto;
+    transition: filter 0.3s;
+    display: block;
+  }
+  .kanta-img.happy { filter: brightness(1.2); }
+  .kanta-img.sad { filter: brightness(0.7); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📦 通関士試験 学習アプリ</h1>
+    <span>関太先生と一緒に合格を目指そう！</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="switchTab('home', this)">🏠 ホーム</button>
+  <button onclick="switchTab('quiz', this)">📝 問題集</button>
+  <button onclick="switchTab('glossary', this)">📖 用語集</button>
+  <button onclick="switchTab('laws', this)">⚖️ 法令</button>
+  <button onclick="switchTab('ai', this)">🤖 AI質問</button>
+</nav>
+
+<main>
+
+<!-- ===== HOME ===== -->
+<div id="tab-home" class="tab-content active">
+  <div class="kanta-wrap">
+    <div class="kanta-svg-wrap">
+      <img id="kanta-home" class="kanta-img" src="/chara.png" alt="関太先生">
+    </div>
+    <div class="speech-bubble" id="home-speech">
+      こんにちは！通関士試験の合格を一緒に目指しましょう！
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="num" id="stat-correct">0</div>
+      <div class="label">正解数</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" id="stat-total">0</div>
+      <div class="label">回答数</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" id="stat-rate">—</div>
+      <div class="label">正答率</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" id="stat-today">0</div>
+      <div class="label">今日の問題数</div>
+    </div>
+  </div>
+
+  <div class="card daily-q" id="daily-card">
+    <h2>📅 今日の一問</h2>
+    <div class="loading dot-blink" id="daily-loading">AIが問題を生成しています</div>
+    <div id="daily-content" style="display:none">
+      <div class="subject-badge" id="daily-subject"></div>
+      <p class="q-text" id="daily-question"></p>
+      <div class="choices" id="daily-choices"></div>
+      <div id="daily-result" style="margin-top:12px; display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="tab-quiz" class="tab-content">
+  <div class="subject-tabs">
+    <div class="subject-tab active" onclick="setQuizSubject('all', this)">すべて</div>
+    <div class="subject-tab" onclick="setQuizSubject('関税法', this)">関税法</div>
+    <div class="subject-tab" onclick="setQuizSubject('通関業法', this)">通関業法</div>
+    <div class="subject-tab" onclick="setQuizSubject('外為法', this)">外為法</div>
+  </div>
+
+  <div class="kanta-wrap">
+    <div class="kanta-svg-wrap">
+      <img id="kanta-quiz" class="kanta-img" src="/chara.png" alt="関太先生">
+    </div>
+    <div class="speech-bubble" id="quiz-speech">問題を選んで挑戦してみましょう！</div>
+  </div>
+
+  <div class="card">
+    <div class="q-counter" id="quiz-counter">問題 1 / 10</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="quiz-progress" style="width:10%"></div></div>
+    <div class="subject-badge" id="quiz-subject-badge">関税法</div>
+    <p class="q-text" id="quiz-question"></p>
+    <div class="choices" id="quiz-choices"></div>
+    <div id="quiz-result" style="margin-top:12px; display:none"></div>
+    <div class="quiz-nav">
+      <button class="btn btn-secondary" onclick="prevQuestion()">← 前へ</button>
+      <button class="btn btn-primary" id="quiz-next-btn" onclick="nextQuestion()">次へ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GLOSSARY ===== -->
+<div id="tab-glossary" class="tab-content">
+  <div class="glossary-filters">
+    <button class="filter-btn active" onclick="filterGlossary('all', this)">すべて</button>
+    <button class="filter-btn" onclick="filterGlossary('関税法', this)">関税法</button>
+    <button class="filter-btn" onclick="filterGlossary('通関業法', this)">通関業法</button>
+    <button class="filter-btn" onclick="filterGlossary('外為法', this)">外為法</button>
+    <button class="filter-btn" onclick="filterGlossary('基礎', this)">基礎</button>
+  </div>
+  <div class="card" id="glossary-list"></div>
+</div>
+
+<!-- ===== LAWS ===== -->
+<div id="tab-laws" class="tab-content">
+  <div class="card">
+    <h2>⚖️ 主要条文リファレンス</h2>
+
+    <details class="law-section">
+      <summary>関税法 主要条文</summary>
+      <div class="law-body">
+        <div class="law-article">
+          <h4>第2条（定義）</h4>
+          <p>「輸入」とは、外国から本邦に到着した外国貨物（…）を本邦に引き取ることをいう。「輸出」とは、内国貨物を外国に向けて送り出すことをいう。</p>
+        </div>
+        <div class="law-article">
+          <h4>第67条（輸出又は輸入の申告）</h4>
+          <p>貨物を輸出し、又は輸入しようとする者は、政令で定めるところにより、当該貨物の品名並びに数量及び価格（輸入貨物にあっては、課税標準となるべき数量及び価格）その他必要な事項を税関長に申告し、貨物につき必要な検査を経て、その許可を受けなければならない。</p>
+        </div>
+        <div class="law-article">
+          <h4>第69条の2（輸入してはならない貨物）</h4>
+          <p>次に掲げる貨物は、輸入してはならない。①麻薬及び向精神薬、②けん銃等の火器、③爆発物、④火薬類、⑤化学兵器、⑥感染症の病原体、⑦偽造・変造の貨幣・紙幣・銀行券、⑧公安又は風俗を害すべき書籍等、⑨不正競争防止法違反物品、⑩特許権等知的財産侵害物品</p>
+        </div>
+        <div class="law-article">
+          <h4>第73条（輸入の許可前における貨物の引取り）</h4>
+          <p>輸入申告がされた貨物については、その輸入を許可する前においても、担保を提供させて、その引取りを承認することができる（BP：ビフォアパーミット）。</p>
+        </div>
+        <div class="law-article">
+          <h4>第77条（関税の納付）</h4>
+          <p>関税は、輸入の許可の時（特例輸入者の場合は特例申告書の提出期限）までに納付しなければならない。</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="law-section" style="margin-top:8px">
+      <summary>通関業法 主要条文</summary>
+      <div class="law-body">
+        <div class="law-article">
+          <h4>第1条（目的）</h4>
+          <p>この法律は、通関業を営む者についてその許可及び監督等に関する制度を定め、その業務の適正な運営を確保することにより、関税法等の適正な執行に資するとともに、輸出入貿易の公正な発展に寄与することを目的とする。</p>
+        </div>
+        <div class="law-article">
+          <h4>第3条（許可）</h4>
+          <p>通関業を営もうとする者は、税関長の許可を受けなければならない。許可は税関官署ごとに取得が必要（ただし営業区域の特例あり）。</p>
+        </div>
+        <div class="law-article">
+          <h4>第13条（通関士の設置義務）</h4>
+          <p>通関業者は、その営業所に通関士を置かなければならない。ただし、当該営業所において通関業務の量が少ない等一定の場合はこの限りでない。</p>
+        </div>
+        <div class="law-article">
+          <h4>第19条（通関士の審査）</h4>
+          <p>通関士は、通関業者の作成した申告書等について、内容を審査し、記名しなければならない（通関士審査制度）。</p>
+        </div>
+        <div class="law-article">
+          <h4>第31条（秘密保持義務）</h4>
+          <p>通関業者及びその役員・従業員は、通関業務に関して知り得た秘密を漏らし、又は盗用してはならない。この義務は退職後も継続する。</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="law-section" style="margin-top:8px">
+      <summary>外国為替及び外国貿易法（外為法）主要条文</summary>
+      <div class="law-body">
+        <div class="law-article">
+          <h4>第1条（目的）</h4>
+          <p>対外取引の正常な発展及び我が国又は国際社会の平和と安全の維持を目的とする。原則自由・例外規制の原則。</p>
+        </div>
+        <div class="law-article">
+          <h4>第48条（輸出の許可等）</h4>
+          <p>国際的な平和及び安全の維持のため、特定の貨物・技術の輸出には経済産業大臣の許可が必要（輸出許可制度・経済産業省規制）。</p>
+        </div>
+        <div class="law-article">
+          <h4>第52条（輸入の承認）</h4>
+          <p>特定の品目の輸入については経済産業大臣の承認が必要（輸入承認制度）。</p>
+        </div>
+        <div class="law-article">
+          <h4>第55条の5（支払い等の許可）</h4>
+          <p>特定の国・地域への支払いや資本取引には財務大臣の許可が必要となる場合がある（資本規制）。</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== AI CHAT ===== -->
+<div id="tab-ai" class="tab-content">
+  <div class="kanta-wrap">
+    <div class="kanta-svg-wrap">
+      <img id="kanta-ai" class="kanta-img" src="/chara.png" alt="関太先生">
+    </div>
+    <div class="speech-bubble">通関士試験について何でも聞いてください！</div>
+  </div>
+  <div class="card">
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-input" type="text" placeholder="例：関税の種類を教えて" onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="btn btn-primary" onclick="sendChat()">送信</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ===== STATE =====
+const state = {
+  correct: parseInt(localStorage.getItem('correct') || '0'),
+  total: parseInt(localStorage.getItem('total') || '0'),
+  todayCount: parseInt(localStorage.getItem('todayCount_' + today()) || '0'),
+  quizIndex: 0,
+  quizSubject: 'all',
+  quizAnswered: false,
+  dailyAnswered: false,
+};
+
+function today() { return new Date().toISOString().slice(0,10); }
+function saveStats() {
+  localStorage.setItem('correct', state.correct);
+  localStorage.setItem('total', state.total);
+  localStorage.setItem('todayCount_' + today(), state.todayCount);
+}
+
+// ===== TABS =====
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ===== KANTA =====
+function setKantaFace(id, face) {
+  const el = document.getElementById(id);
+  el.classList.remove('happy','sad');
+  if (face) el.classList.add(face);
+}
+function setSpeech(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+// ===== STATS =====
+function updateStats() {
+  document.getElementById('stat-correct').textContent = state.correct;
+  document.getElementById('stat-total').textContent = state.total;
+  document.getElementById('stat-rate').textContent = state.total > 0
+    ? Math.round(state.correct / state.total * 100) + '%' : '—';
+  document.getElementById('stat-today').textContent = state.todayCount;
+}
+
+// ===== DAILY QUESTION =====
+async function loadDaily() {
+  try {
+    const res = await fetch('/api/daily');
+    const q = await res.json();
+    document.getElementById('daily-loading').style.display = 'none';
+    document.getElementById('daily-content').style.display = 'block';
+    document.getElementById('daily-subject').textContent = q.subject || '通関士';
+    document.getElementById('daily-question').textContent = q.question;
+
+    const choicesEl = document.getElementById('daily-choices');
+    choicesEl.innerHTML = '';
+    (q.choices || []).forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = `${['A','B','C','D'][i]}. ${c}`;
+      btn.onclick = () => answerDaily(q, i, btn);
+      choicesEl.appendChild(btn);
+    });
+  } catch(e) {
+    document.getElementById('daily-loading').textContent = '問題の取得に失敗しました（GROQ_API_KEY要確認）';
+  }
+}
+
+async function answerDaily(q, selectedIdx, clickedBtn) {
+  if (state.dailyAnswered) return;
+  state.dailyAnswered = true;
+
+  const allBtns = document.querySelectorAll('#daily-choices .choice-btn');
+  allBtns.forEach((b, i) => {
+    b.classList.add('disabled');
+    if (i === q.correctIndex) b.classList.add('correct');
+    else if (i === selectedIdx) b.classList.add('wrong');
+  });
+
+  const isCorrect = selectedIdx === q.correctIndex;
+  state.correct += isCorrect ? 1 : 0;
+  state.total += 1;
+  state.todayCount += 1;
+  saveStats();
+  updateStats();
+
+  const resultEl = document.getElementById('daily-result');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `<span class="result-badge ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '✅ 正解！' : '❌ 不正解'}</span><br><span style="color:var(--muted);font-size:0.8rem" class="dot-blink" id="daily-explain-loading">関太先生が解説中</span>`;
+
+  setKantaFace('kanta-home', isCorrect ? 'happy' : 'sad');
+  setSpeech('home-speech', isCorrect ? '正解です！素晴らしいですね！' : '惜しかったですね…一緒に復習しましょう。');
+
+  try {
+    const res = await fetch('/api/explain', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ question: q.question, choices: q.choices, correctIndex: q.correctIndex, selectedIndex: selectedIdx, explanation: q.explanation })
+    });
+    const data = await res.json();
+    document.getElementById('daily-explain-loading').remove();
+    resultEl.innerHTML += `<p style="margin-top:8px;font-size:0.84rem;line-height:1.7">${data.reply}</p>`;
+    setSpeech('home-speech', data.reply.slice(0, 60) + '…');
+  } catch(e) {
+    document.getElementById('daily-explain-loading')?.remove();
+    resultEl.innerHTML += `<p style="margin-top:6px;font-size:0.8rem;color:var(--muted)">${q.explanation || ''}</p>`;
+  }
+}
+
+// ===== QUIZ DATA =====
+const QUIZ_DATA = [
+  // 関税法
+  { subject:'関税法', question:'輸入申告は原則としてどの時点で行うか？', choices:['貨物が保税地域に搬入された後','貨物が本邦に到着する前','貨物が保税地域に搬入される前','輸入許可後'], correctIndex:0, explanation:'関税法上、輸入申告は原則として貨物が置かれている保税地域に搬入された後に行います。' },
+  { subject:'関税法', question:'特例輸入者（認定通関業者の顧客等）の関税申告の特例として正しいものは？', choices:['申告期限が輸入許可後6ヶ月','輸入許可前に申告し許可後に関税納付','毎月の輸入を翌月末までにまとめて申告','関税が免除される'], correctIndex:2, explanation:'特例輸入者制度では、毎月の輸入許可貨物を翌月末日までに特例申告書を提出してまとめて納税します。' },
+  { subject:'関税法', question:'関税の種類のうち「国内産業保護」を目的とするものは？', choices:['財政関税','保護関税','報復関税','相殺関税'], correctIndex:1, explanation:'保護関税は国内産業を外国の競争から守るため、外国製品に高い関税をかけるものです。' },
+  { subject:'関税法', question:'保税蔵置場における外国貨物の蔵置期間は原則何年か？', choices:['6ヶ月','1年','2年','3年'], correctIndex:2, explanation:'保税蔵置場での外国貨物の蔵置期間は原則2年です（許可から2年）。' },
+  { subject:'関税法', question:'輸入禁制品に該当しないものは？', choices:['麻薬','偽造紙幣','著作権侵害物品','輸入割当品目'], correctIndex:3, explanation:'輸入割当品目は禁制品ではなく、経済産業大臣の承認（外為法）が必要な品目です。' },
+  { subject:'関税法', question:'関税率表の解釈に関するHS条約（商品の名称及び分類についての統一システム）で定める基本原則は何か？', choices:['通則1～6','通則1～8','通則1～10','通則1～4'], correctIndex:0, explanation:'関税率表の解釈に関する通則は通則1から6まであります。' },
+  // 通関業法
+  { subject:'通関業法', question:'通関業の許可権者は誰か？', choices:['財務大臣','経済産業大臣','税関長','国土交通大臣'], correctIndex:2, explanation:'通関業を営むには、税関官署ごとに税関長の許可が必要です。' },
+  { subject:'通関業法', question:'通関士試験の実施機関は？', choices:['税関','財務省','通関業者連合会','国税庁'], correctIndex:1, explanation:'通関士試験は財務省が実施します（税関が窓口となることが多い）。' },
+  { subject:'通関業法', question:'通関業者の秘密保持義務はいつまで続くか？', choices:['在職中のみ','許可取り消しまで','退職後も継続','5年間'], correctIndex:2, explanation:'通関業法第31条により、秘密保持義務は退職後も継続します。' },
+  { subject:'通関業法', question:'通関業者が通関士を設置しなくてよい場合は？', choices:['業務量が少ない場合のみ','売上1億円未満の場合','設立3年未満の場合','輸出のみ取り扱う場合'], correctIndex:0, explanation:'通関業務量が少ない等、一定の条件を満たす営業所では通関士の設置が免除されます。' },
+  // 外為法
+  { subject:'外為法', question:'輸出許可（外為法第48条）の許可権者は？', choices:['税関長','財務大臣','経済産業大臣','外務大臣'], correctIndex:2, explanation:'外為法に基づく輸出許可は経済産業大臣が付与します（安全保障貿易管理）。' },
+  { subject:'外為法', question:'外為法の原則として正しいものは？', choices:['原則規制・例外自由','原則自由・例外規制','完全規制','完全自由'], correctIndex:1, explanation:'外為法は「原則自由・例外規制」の考え方をとっています。' },
+  { subject:'外為法', question:'特定の国への資本取引規制の許可権者は？', choices:['経済産業大臣','財務大臣','内閣総理大臣','外務大臣'], correctIndex:1, explanation:'資本取引・支払い等の規制は財務大臣の所管です。' },
+];
+
+let filteredQuiz = [...QUIZ_DATA];
+
+function setQuizSubject(subject, btn) {
+  state.quizSubject = subject;
+  document.querySelectorAll('.subject-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filteredQuiz = subject === 'all' ? [...QUIZ_DATA] : QUIZ_DATA.filter(q => q.subject === subject);
+  state.quizIndex = 0;
+  state.quizAnswered = false;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  if (!filteredQuiz.length) return;
+  const q = filteredQuiz[state.quizIndex % filteredQuiz.length];
+  const total = filteredQuiz.length;
+  const current = (state.quizIndex % total) + 1;
+
+  document.getElementById('quiz-counter').textContent = `問題 ${current} / ${total}`;
+  document.getElementById('quiz-progress').style.width = (current / total * 100) + '%';
+  document.getElementById('quiz-subject-badge').textContent = q.subject;
+  document.getElementById('quiz-question').textContent = q.question;
+  document.getElementById('quiz-result').style.display = 'none';
+  document.getElementById('quiz-result').innerHTML = '';
+  setKantaFace('kanta-quiz', null);
+  setSpeech('quiz-speech', '問題をよく読んで答えてみましょう！');
+  state.quizAnswered = false;
+
+  const choicesEl = document.getElementById('quiz-choices');
+  choicesEl.innerHTML = '';
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = `${['A','B','C','D'][i]}. ${c}`;
+    btn.onclick = () => answerQuiz(q, i);
+    choicesEl.appendChild(btn);
+  });
+}
+
+async function answerQuiz(q, selectedIdx) {
+  if (state.quizAnswered) return;
+  state.quizAnswered = true;
+
+  const allBtns = document.querySelectorAll('#quiz-choices .choice-btn');
+  allBtns.forEach((b, i) => {
+    b.classList.add('disabled');
+    if (i === q.correctIndex) b.classList.add('correct');
+    else if (i === selectedIdx) b.classList.add('wrong');
+  });
+
+  const isCorrect = selectedIdx === q.correctIndex;
+  state.correct += isCorrect ? 1 : 0;
+  state.total += 1;
+  state.todayCount += 1;
+  saveStats();
+  updateStats();
+
+  setKantaFace('kanta-quiz', isCorrect ? 'happy' : 'sad');
+  setSpeech('quiz-speech', isCorrect ? 'よくできました！正解です！' : '難しかったですね…解説を読んでみてください。');
+
+  const resultEl = document.getElementById('quiz-result');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `<span class="result-badge ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '✅ 正解！' : '❌ 不正解'}</span><br><span style="color:var(--muted);font-size:0.8rem" class="dot-blink" id="quiz-explain-loading">解説を取得中</span>`;
+
+  try {
+    const res = await fetch('/api/explain', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ question: q.question, choices: q.choices, correctIndex: q.correctIndex, selectedIndex: selectedIdx, explanation: q.explanation })
+    });
+    const data = await res.json();
+    document.getElementById('quiz-explain-loading')?.remove();
+    resultEl.innerHTML += `<p style="margin-top:8px;font-size:0.84rem;line-height:1.7">${data.reply}</p>`;
+    setSpeech('quiz-speech', data.reply.slice(0, 60) + '…');
+  } catch(e) {
+    document.getElementById('quiz-explain-loading')?.remove();
+    resultEl.innerHTML += `<p style="margin-top:6px;font-size:0.8rem;color:var(--muted)">${q.explanation}</p>`;
+  }
+}
+
+function nextQuestion() {
+  state.quizIndex = (state.quizIndex + 1) % filteredQuiz.length;
+  renderQuiz();
+}
+function prevQuestion() {
+  state.quizIndex = (state.quizIndex - 1 + filteredQuiz.length) % filteredQuiz.length;
+  renderQuiz();
+}
+
+// ===== GLOSSARY =====
+const GLOSSARY = [
+  { word:'保税地域', tag:'関税法', desc:'外国貨物を関税の徴収を留保した状態で置くことができる場所。指定保税地域・保税蔵置場・保税工場・保税展示場・総合保税地域の5種類がある。' },
+  { word:'課税標準', tag:'関税法', desc:'関税額の計算基礎となるもの。従価税では課税価格（CIF価格）、従量税では数量・重量など。' },
+  { word:'CIF価格', tag:'基礎', desc:'Cost（原価）+ Insurance（保険料）+ Freight（運賃）の合計。輸入申告における課税価格の原則的な算出根拠。' },
+  { word:'FOB価格', tag:'基礎', desc:'Free On Board（本船渡し価格）。輸出申告における統計価格はFOB価格を基準とする。' },
+  { word:'関税率表', tag:'関税法', desc:'輸入貨物に適用される関税率を品目別に定めた表。HS条約に基づく6桁のHSコードに日本独自の細分を加えた9桁で構成。' },
+  { word:'HSコード', tag:'基礎', desc:'Harmonized System（統一システム）コード。世界共通の貨物分類コード（6桁）で、品目分類の国際標準。' },
+  { word:'通関士', tag:'通関業法', desc:'財務大臣（通関士試験合格後、税関長への確認申請）が認める国家資格者。通関書類の審査・記名・押印を行う。' },
+  { word:'認定通関業者', tag:'通関業法', desc:'AEO（Authorized Economic Operator）制度に基づき税関長が認定した通関業者。手続き緩和・迅速化の特例が受けられる。' },
+  { word:'特例輸入者', tag:'関税法', desc:'AEO制度の輸入者版。税関長の承認を受けた信頼性の高い輸入者で、特例申告（翌月末まとめ申告）が可能。' },
+  { word:'輸入割当（IQ）', tag:'外為法', desc:'Import Quota。特定の品目について数量・金額を限定して輸入を認める制度。経済産業大臣が割り当てる。' },
+  { word:'輸出許可（外為法）', tag:'外為法', desc:'安全保障上の観点から、特定の貨物・技術の輸出に経済産業大臣の許可が必要な制度（外為法第48条）。' },
+  { word:'ダンピング防止税', tag:'関税法', desc:'不当廉価で輸出された外国品に対して課す追加関税。国内産業の損害を防止するため関税定率法に基づき発動。' },
+  { word:'相殺関税', tag:'関税法', desc:'輸出国が補助金を付与した外国貨物に対し、その補助金相当額を相殺するために課す特別関税。' },
+  { word:'申告納税方式', tag:'関税法', desc:'輸入者が自ら税額を計算して申告・納税する方式。日本の輸入関税の原則的な方式。' },
+  { word:'賦課課税方式', tag:'関税法', desc:'税関長が関税額を決定する方式。旅行者の携帯品等に適用される。' },
+  { word:'事前教示制度', tag:'関税法', desc:'輸入前に税関に対して関税分類・関税評価等について照会し、回答を得る制度。法的拘束力はないが行政指導的効力がある。' },
+  { word:'AEO制度', tag:'基礎', desc:'Authorized Economic Operator。WCO（世界税関機構）が推進するコンプライアンス優良な事業者への手続き緩和制度。' },
+  { word:'インボイス', tag:'基礎', desc:'商業送り状。輸出者が輸入者宛に発行する取引明細書。輸入申告の際に必須書類のひとつ。' },
+  { word:'パッキングリスト', tag:'基礎', desc:'梱包明細書。貨物の個数・重量・梱包方法等を記載した書類。輸入申告時の添付書類。' },
+  { word:'B/L（船荷証券）', tag:'基礎', desc:'Bill of Lading。海上運送における運送品の受取証・運送契約証・有価証券（権原証券）の3機能を持つ。' },
+];
+
+let glossaryFilter = 'all';
+
+function filterGlossary(tag, btn) {
+  glossaryFilter = tag;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGlossary();
+}
+
+function renderGlossary() {
+  const list = document.getElementById('glossary-list');
+  const items = glossaryFilter === 'all' ? GLOSSARY : GLOSSARY.filter(g => g.tag === glossaryFilter);
+  list.innerHTML = items.map((g, i) => `
+    <div class="term-item" id="term-${i}" onclick="toggleTerm(${i})">
+      <div class="term-header">
+        <span class="term-word">${g.word}</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="term-tag">${g.tag}</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="term-desc" id="term-desc-${i}">${g.desc}</div>
+    </div>
+  `).join('');
+}
+
+function toggleTerm(i) {
+  const item = document.getElementById('term-' + i);
+  const desc = document.getElementById('term-desc-' + i);
+  item.classList.toggle('open');
+  desc.classList.toggle('open');
+}
+
+// ===== AI CHAT =====
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message) return;
+  input.value = '';
+
+  const chatEl = document.getElementById('chat-messages');
+  chatEl.innerHTML += `<div class="msg user">${escapeHtml(message)}</div>`;
+
+  const loadingId = 'loading-' + Date.now();
+  chatEl.innerHTML += `<div class="msg ai" id="${loadingId}"><span class="dot-blink">考え中</span></div>`;
+  chatEl.scrollTop = chatEl.scrollHeight;
+
+  setKantaFace('kanta-ai', null);
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message })
+    });
+    const data = await res.json();
+    document.getElementById(loadingId).textContent = data.reply;
+    setKantaFace('kanta-ai', 'happy');
+  } catch(e) {
+    document.getElementById(loadingId).textContent = '申し訳ありません、エラーが発生しました。';
+    setKantaFace('kanta-ai', 'sad');
+  }
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===== INIT =====
+updateStats();
+loadDaily();
+renderQuiz();
+renderGlossary();
+</script>
+</body>
+</html>
