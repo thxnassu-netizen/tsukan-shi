@@ -797,6 +797,162 @@ function filterSub(sub, btn) {
   renderGlossary();
 }
 
+const GLOSSARY_SVG = {
+  '輸入申告': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 120" style="margin-top:10px;display:block">
+    <rect x="10" y="33" width="110" height="50" rx="8" fill="#1a5276"/>
+    <text x="65" y="54" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">輸入者</text>
+    <text x="65" y="70" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">（荷主）</text>
+    <line x1="120" y1="58" x2="158" y2="58" stroke="#2980b9" stroke-width="2"/>
+    <polygon points="155,52 170,58 155,64" fill="#2980b9"/>
+    <text x="139" y="48" text-anchor="middle" fill="#2980b9" font-size="9" font-family="sans-serif">依頼</text>
+    <rect x="170" y="23" width="130" height="70" rx="8" fill="#2980b9"/>
+    <text x="235" y="51" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="sans-serif">通関業者</text>
+    <text x="235" y="67" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">申告書作成・提出</text>
+    <text x="235" y="81" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">通関士が審査・記名</text>
+    <line x1="300" y1="58" x2="338" y2="58" stroke="#2980b9" stroke-width="2"/>
+    <polygon points="335,52 350,58 335,64" fill="#2980b9"/>
+    <text x="319" y="48" text-anchor="middle" fill="#2980b9" font-size="9" font-family="sans-serif">申告書</text>
+    <rect x="350" y="33" width="110" height="50" rx="8" fill="#1a5276"/>
+    <text x="405" y="54" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">税関</text>
+    <text x="405" y="70" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">審査・許可</text>
+    <line x1="350" y1="98" x2="120" y2="98" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <polygon points="123,92 108,98 123,104" fill="#27ae60"/>
+    <text x="235" y="115" text-anchor="middle" fill="#27ae60" font-size="10" font-family="sans-serif">輸入許可（内国貨物へ）</text>
+  </svg>`,
+
+  '保税地域': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 130" style="margin-top:10px;display:block">
+    <polygon points="90,38 250,8 410,38" fill="#1a5276"/>
+    <text x="250" y="30" text-anchor="middle" fill="white" font-size="11" font-family="sans-serif">保税地域（倉庫）</text>
+    <rect x="90" y="38" width="320" height="72" rx="0" fill="#eaf3fb" stroke="#2980b9" stroke-width="2"/>
+    <rect x="110" y="52" width="60" height="44" rx="3" fill="#2980b9" opacity="0.85"/>
+    <text x="140" y="77" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif">外国貨物</text>
+    <rect x="185" y="52" width="60" height="44" rx="3" fill="#2980b9" opacity="0.85"/>
+    <text x="215" y="77" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif">外国貨物</text>
+    <rect x="260" y="52" width="60" height="44" rx="3" fill="#2980b9" opacity="0.85"/>
+    <text x="290" y="77" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif">外国貨物</text>
+    <rect x="335" y="52" width="60" height="44" rx="3" fill="#5dade2" opacity="0.85"/>
+    <text x="365" y="74" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif">加工・</text>
+    <text x="365" y="88" text-anchor="middle" fill="white" font-size="9" font-family="sans-serif">展示も可</text>
+    <text x="250" y="122" text-anchor="middle" fill="#e74c3c" font-size="11" font-family="sans-serif">関税未納のまま蔵置・加工・展示が可能</text>
+  </svg>`,
+
+  'CIF価格': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 125" style="margin-top:10px;display:block">
+    <text x="250" y="16" text-anchor="middle" fill="#1a5276" font-size="12" font-weight="bold" font-family="sans-serif">課税価格（CIF価格）の内訳</text>
+    <rect x="10" y="26" width="185" height="48" rx="6" fill="#1a5276"/>
+    <text x="102" y="48" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">商品代金（Cost）</text>
+    <text x="102" y="65" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">輸出者への支払額</text>
+    <text x="208" y="55" text-anchor="middle" fill="#1a5276" font-size="22" font-weight="bold">＋</text>
+    <rect x="222" y="26" width="130" height="48" rx="6" fill="#2980b9"/>
+    <text x="287" y="48" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">運賃（Freight）</text>
+    <text x="287" y="65" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">仕向港までの運送費</text>
+    <text x="364" y="55" text-anchor="middle" fill="#1a5276" font-size="22" font-weight="bold">＋</text>
+    <rect x="376" y="26" width="118" height="48" rx="6" fill="#5dade2"/>
+    <text x="435" y="45" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif">保険料</text>
+    <text x="435" y="60" text-anchor="middle" fill="white" font-size="11" font-family="sans-serif">（Insurance）</text>
+    <text x="435" y="73" text-anchor="middle" fill="#d6eaf8" font-size="9" font-family="sans-serif">海上保険等</text>
+    <line x1="10" y1="88" x2="494" y2="88" stroke="#1a5276" stroke-width="1.5"/>
+    <text x="250" y="110" text-anchor="middle" fill="#1a5276" font-size="14" font-weight="bold" font-family="sans-serif">＝ CIF価格 ＝ 課税価格（原則）</text>
+  </svg>`,
+
+  '従価税': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 110" style="margin-top:10px;display:block">
+    <text x="250" y="16" text-anchor="middle" fill="#1a5276" font-size="12" font-weight="bold" font-family="sans-serif">従価税の計算式</text>
+    <rect x="15" y="25" width="150" height="56" rx="6" fill="#1a5276"/>
+    <text x="90" y="50" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">課税価格</text>
+    <text x="90" y="68" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">（CIF価格）</text>
+    <text x="183" y="58" text-anchor="middle" fill="#1a5276" font-size="26" font-weight="bold">×</text>
+    <rect x="210" y="25" width="120" height="56" rx="6" fill="#2980b9"/>
+    <text x="270" y="50" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">税率（%）</text>
+    <text x="270" y="68" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">例：5%</text>
+    <text x="349" y="58" text-anchor="middle" fill="#1a5276" font-size="26" font-weight="bold">＝</text>
+    <rect x="370" y="25" width="120" height="56" rx="6" fill="#e67e22"/>
+    <text x="430" y="50" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">関税額</text>
+    <text x="430" y="68" text-anchor="middle" fill="#fad7a0" font-size="10" font-family="sans-serif">（従価税）</text>
+  </svg>`,
+
+  '従量税': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 110" style="margin-top:10px;display:block">
+    <text x="250" y="16" text-anchor="middle" fill="#1a5276" font-size="12" font-weight="bold" font-family="sans-serif">従量税の計算式</text>
+    <rect x="15" y="25" width="150" height="56" rx="6" fill="#1a5276"/>
+    <text x="90" y="50" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">数量・重量</text>
+    <text x="90" y="68" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">例：100kg</text>
+    <text x="183" y="58" text-anchor="middle" fill="#1a5276" font-size="26" font-weight="bold">×</text>
+    <rect x="210" y="25" width="130" height="56" rx="6" fill="#2980b9"/>
+    <text x="275" y="50" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">単位税額</text>
+    <text x="275" y="68" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">例：○円/kg</text>
+    <text x="358" y="58" text-anchor="middle" fill="#1a5276" font-size="26" font-weight="bold">＝</text>
+    <rect x="375" y="25" width="115" height="56" rx="6" fill="#e67e22"/>
+    <text x="432" y="50" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">関税額</text>
+    <text x="432" y="68" text-anchor="middle" fill="#fad7a0" font-size="10" font-family="sans-serif">（従量税）</text>
+  </svg>`,
+
+  '原産地証明書': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 130" style="margin-top:10px;display:block">
+    <rect x="140" y="8" width="220" height="110" rx="4" fill="white" stroke="#2980b9" stroke-width="2"/>
+    <polygon points="316,8 360,8 360,36 316,36" fill="#eaf3fb" stroke="#2980b9" stroke-width="1"/>
+    <line x1="316" y1="8" x2="316" y2="36" stroke="#2980b9" stroke-width="1"/>
+    <line x1="316" y1="36" x2="360" y2="36" stroke="#2980b9" stroke-width="1"/>
+    <text x="228" y="35" text-anchor="middle" fill="#1a5276" font-size="11" font-weight="bold" font-family="sans-serif">CERTIFICATE</text>
+    <text x="228" y="50" text-anchor="middle" fill="#1a5276" font-size="11" font-weight="bold" font-family="sans-serif">OF ORIGIN</text>
+    <line x1="160" y1="62" x2="310" y2="62" stroke="#aed6f1" stroke-width="2"/>
+    <line x1="160" y1="74" x2="295" y2="74" stroke="#aed6f1" stroke-width="2"/>
+    <line x1="160" y1="86" x2="310" y2="86" stroke="#aed6f1" stroke-width="2"/>
+    <line x1="160" y1="98" x2="280" y2="98" stroke="#aed6f1" stroke-width="2"/>
+    <circle cx="300" cy="96" r="20" fill="none" stroke="#e74c3c" stroke-width="2"/>
+    <text x="300" y="93" text-anchor="middle" fill="#e74c3c" font-size="9" font-family="sans-serif">認証</text>
+    <text x="300" y="106" text-anchor="middle" fill="#e74c3c" font-size="9" font-family="sans-serif">印</text>
+    <text x="110" y="75" text-anchor="middle" fill="#1a5276" font-size="10" font-family="sans-serif">発給機関：</text>
+    <text x="110" y="89" text-anchor="middle" fill="#1a5276" font-size="10" font-family="sans-serif">商工会議所</text>
+    <text x="250" y="128" text-anchor="middle" fill="#1a5276" font-size="11" font-family="sans-serif">特恵・EPA/FTA関税適用に必須</text>
+  </svg>`,
+
+  '戦略物資': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 120" style="margin-top:10px;display:block">
+    <text x="250" y="14" text-anchor="middle" fill="#1a5276" font-size="11" font-weight="bold" font-family="sans-serif">戦略物資 輸出許可フロー</text>
+    <rect x="5" y="25" width="88" height="52" rx="6" fill="#1a5276"/>
+    <text x="49" y="48" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif">輸出者</text>
+    <text x="49" y="64" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">（申請者）</text>
+    <line x1="93" y1="51" x2="115" y2="51" stroke="#2980b9" stroke-width="2"/>
+    <polygon points="113,45 126,51 113,57" fill="#2980b9"/>
+    <text x="104" y="43" text-anchor="middle" fill="#2980b9" font-size="8" font-family="sans-serif">許可申請</text>
+    <rect x="126" y="18" width="120" height="66" rx="6" fill="#2980b9"/>
+    <text x="186" y="41" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif">経済産業</text>
+    <text x="186" y="55" text-anchor="middle" fill="white" font-size="10" font-family="sans-serif">大臣</text>
+    <text x="186" y="70" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">需要者・用途審査</text>
+    <line x1="246" y1="51" x2="268" y2="51" stroke="#27ae60" stroke-width="2"/>
+    <polygon points="266,45 279,51 266,57" fill="#27ae60"/>
+    <text x="257" y="43" text-anchor="middle" fill="#27ae60" font-size="8" font-family="sans-serif">許可証</text>
+    <rect x="279" y="25" width="88" height="52" rx="6" fill="#1a5276"/>
+    <text x="323" y="48" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif">税関</text>
+    <text x="323" y="64" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">許可証確認</text>
+    <line x1="367" y1="51" x2="389" y2="51" stroke="#27ae60" stroke-width="2"/>
+    <polygon points="387,45 400,51 387,57" fill="#27ae60"/>
+    <rect x="400" y="25" width="95" height="52" rx="6" fill="#27ae60"/>
+    <text x="447" y="48" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif">輸出</text>
+    <text x="447" y="64" text-anchor="middle" fill="#d5f5e3" font-size="9" font-family="sans-serif">（許可後）</text>
+    <text x="250" y="108" text-anchor="middle" fill="#e74c3c" font-size="10" font-family="sans-serif">※無許可輸出は外為法違反・刑事罰あり</text>
+  </svg>`,
+
+  '通関業者': `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500 120" style="margin-top:10px;display:block">
+    <rect x="10" y="30" width="110" height="58" rx="8" fill="#1a5276"/>
+    <text x="65" y="55" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">輸出入者</text>
+    <text x="65" y="72" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">（荷主）</text>
+    <line x1="120" y1="59" x2="158" y2="59" stroke="#2980b9" stroke-width="2"/>
+    <polygon points="156,53 170,59 156,65" fill="#2980b9"/>
+    <polygon points="122,53 108,59 122,65" fill="#2980b9"/>
+    <text x="139" y="48" text-anchor="middle" fill="#2980b9" font-size="8" font-family="sans-serif">委任・代行</text>
+    <rect x="170" y="18" width="160" height="82" rx="8" fill="#2980b9"/>
+    <text x="250" y="45" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">通関業者</text>
+    <text x="250" y="62" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">申告書作成・提出</text>
+    <text x="250" y="76" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">通関士が審査・記名</text>
+    <text x="250" y="90" text-anchor="middle" fill="#aed6f1" font-size="9" font-family="sans-serif">帳簿保管・秘密保持義務</text>
+    <line x1="330" y1="59" x2="368" y2="59" stroke="#2980b9" stroke-width="2"/>
+    <polygon points="366,53 380,59 366,65" fill="#2980b9"/>
+    <polygon points="332,53 318,59 332,65" fill="#2980b9"/>
+    <text x="349" y="48" text-anchor="middle" fill="#2980b9" font-size="8" font-family="sans-serif">申告・許可</text>
+    <rect x="380" y="30" width="110" height="58" rx="8" fill="#1a5276"/>
+    <text x="435" y="55" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">税関</text>
+    <text x="435" y="72" text-anchor="middle" fill="#aed6f1" font-size="10" font-family="sans-serif">審査・許可</text>
+    <text x="250" y="114" text-anchor="middle" fill="#1a5276" font-size="10" font-family="sans-serif">輸出入者と税関の間に立つ専門家</text>
+  </svg>`
+};
+
 function renderGlossary() {
   const list = document.getElementById('glossary-list');
   let items = GLOSSARY;
@@ -810,6 +966,7 @@ function renderGlossary() {
 
   list.innerHTML = items.map((g, i) => {
     const label = g.sub ? g.sub : g.tag;
+    const svg = GLOSSARY_SVG[g.word] || '';
     return `
     <div class="term-item" id="term-${i}" onclick="toggleTerm(${i})">
       <div class="term-header">
@@ -819,7 +976,7 @@ function renderGlossary() {
           <span class="chevron">▼</span>
         </div>
       </div>
-      <div class="term-desc" id="term-desc-${i}">${g.desc}</div>
+      <div class="term-desc" id="term-desc-${i}">${g.desc}${svg}</div>
     </div>`;
   }).join('');
 }
