@@ -109,6 +109,14 @@
     font-size: 0.7rem; font-weight: 600; margin-bottom: 8px;
     background: var(--accent); color: white;
   }
+  .difficulty-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 600; margin-bottom: 8px; margin-left: 6px;
+    color: white;
+  }
+  .difficulty-badge.基礎 { background: var(--success); }
+  .difficulty-badge.標準 { background: var(--warn); }
+  .difficulty-badge.応用 { background: var(--danger); }
   .q-text { font-size: 0.9rem; line-height: 1.7; margin-bottom: 12px; }
   .choices { display: flex; flex-direction: column; gap: 8px; }
   .choice-btn {
@@ -278,11 +286,17 @@
 
 <!-- ===== QUIZ ===== -->
 <div id="tab-quiz" class="tab-content">
-  <div class="subject-tabs">
+  <div class="subject-tabs" id="subject-tabs">
     <div class="subject-tab active" onclick="setQuizSubject('all', this)">すべて</div>
     <div class="subject-tab" onclick="setQuizSubject('関税法', this)">関税法</div>
     <div class="subject-tab" onclick="setQuizSubject('通関業法', this)">通関業法</div>
     <div class="subject-tab" onclick="setQuizSubject('外為法', this)">外為法</div>
+  </div>
+  <div class="subject-tabs" id="difficulty-tabs" style="margin-top:-6px">
+    <div class="subject-tab active" onclick="setQuizDifficulty('all', this)">難易度：全て</div>
+    <div class="subject-tab" onclick="setQuizDifficulty('基礎', this)" style="border-color:#27ae60;color:#27ae60">基礎</div>
+    <div class="subject-tab" onclick="setQuizDifficulty('標準', this)" style="border-color:#f39c12;color:#f39c12">標準</div>
+    <div class="subject-tab" onclick="setQuizDifficulty('応用', this)" style="border-color:#e74c3c;color:#e74c3c">応用</div>
   </div>
 
   <div class="kanta-wrap">
@@ -295,7 +309,10 @@
   <div class="card">
     <div class="q-counter" id="quiz-counter">問題 1 / 10</div>
     <div class="progress-bar-wrap"><div class="progress-bar" id="quiz-progress" style="width:10%"></div></div>
-    <div class="subject-badge" id="quiz-subject-badge">関税法</div>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0">
+      <div class="subject-badge" id="quiz-subject-badge">関税法</div>
+      <span class="difficulty-badge 基礎" id="quiz-difficulty-badge">基礎</span>
+    </div>
     <p class="q-text" id="quiz-question"></p>
     <div class="choices" id="quiz-choices"></div>
     <div id="quiz-result" style="margin-top:12px; display:none"></div>
@@ -429,6 +446,7 @@ const state = {
   todayCount: parseInt(localStorage.getItem('todayCount_' + today()) || '0'),
   quizIndex: 0,
   quizSubject: 'all',
+  quizDifficulty: 'all',
   quizAnswered: false,
   dailyAnswered: false,
 };
@@ -535,34 +553,145 @@ async function answerDaily(q, selectedIdx, clickedBtn) {
 
 // ===== QUIZ DATA =====
 const QUIZ_DATA = [
-  // 関税法
-  { subject:'関税法', question:'輸入申告は原則としてどの時点で行うか？', choices:['貨物が保税地域に搬入された後','貨物が本邦に到着する前','貨物が保税地域に搬入される前','輸入許可後'], correctIndex:0, explanation:'関税法上、輸入申告は原則として貨物が置かれている保税地域に搬入された後に行います。' },
-  { subject:'関税法', question:'特例輸入者（認定通関業者の顧客等）の関税申告の特例として正しいものは？', choices:['申告期限が輸入許可後6ヶ月','輸入許可前に申告し許可後に関税納付','毎月の輸入を翌月末までにまとめて申告','関税が免除される'], correctIndex:2, explanation:'特例輸入者制度では、毎月の輸入許可貨物を翌月末日までに特例申告書を提出してまとめて納税します。' },
-  { subject:'関税法', question:'関税の種類のうち「国内産業保護」を目的とするものは？', choices:['財政関税','保護関税','報復関税','相殺関税'], correctIndex:1, explanation:'保護関税は国内産業を外国の競争から守るため、外国製品に高い関税をかけるものです。' },
-  { subject:'関税法', question:'保税蔵置場における外国貨物の蔵置期間は原則何年か？', choices:['6ヶ月','1年','2年','3年'], correctIndex:2, explanation:'保税蔵置場での外国貨物の蔵置期間は原則2年です（許可から2年）。' },
-  { subject:'関税法', question:'輸入禁制品に該当しないものは？', choices:['麻薬','偽造紙幣','著作権侵害物品','輸入割当品目'], correctIndex:3, explanation:'輸入割当品目は禁制品ではなく、経済産業大臣の承認（外為法）が必要な品目です。' },
-  { subject:'関税法', question:'関税率表の解釈に関するHS条約（商品の名称及び分類についての統一システム）で定める基本原則は何か？', choices:['通則1～6','通則1～8','通則1～10','通則1～4'], correctIndex:0, explanation:'関税率表の解釈に関する通則は通則1から6まであります。' },
-  // 通関業法
-  { subject:'通関業法', question:'通関業の許可権者は誰か？', choices:['財務大臣','経済産業大臣','税関長','国土交通大臣'], correctIndex:2, explanation:'通関業を営むには、税関官署ごとに税関長の許可が必要です。' },
-  { subject:'通関業法', question:'通関士試験の実施機関は？', choices:['税関','財務省','通関業者連合会','国税庁'], correctIndex:1, explanation:'通関士試験は財務省が実施します（税関が窓口となることが多い）。' },
-  { subject:'通関業法', question:'通関業者の秘密保持義務はいつまで続くか？', choices:['在職中のみ','許可取り消しまで','退職後も継続','5年間'], correctIndex:2, explanation:'通関業法第31条により、秘密保持義務は退職後も継続します。' },
-  { subject:'通関業法', question:'通関業者が通関士を設置しなくてよい場合は？', choices:['業務量が少ない場合のみ','売上1億円未満の場合','設立3年未満の場合','輸出のみ取り扱う場合'], correctIndex:0, explanation:'通関業務量が少ない等、一定の条件を満たす営業所では通関士の設置が免除されます。' },
-  // 外為法
-  { subject:'外為法', question:'輸出許可（外為法第48条）の許可権者は？', choices:['税関長','財務大臣','経済産業大臣','外務大臣'], correctIndex:2, explanation:'外為法に基づく輸出許可は経済産業大臣が付与します（安全保障貿易管理）。' },
-  { subject:'外為法', question:'外為法の原則として正しいものは？', choices:['原則規制・例外自由','原則自由・例外規制','完全規制','完全自由'], correctIndex:1, explanation:'外為法は「原則自由・例外規制」の考え方をとっています。' },
-  { subject:'外為法', question:'特定の国への資本取引規制の許可権者は？', choices:['経済産業大臣','財務大臣','内閣総理大臣','外務大臣'], correctIndex:1, explanation:'資本取引・支払い等の規制は財務大臣の所管です。' },
+  // ===== 関税法 基礎 =====
+  { subject:'関税法', difficulty:'基礎', question:'輸入申告は原則としてどの時点で行うか？', choices:['貨物が保税地域に搬入された後','貨物が本邦に到着する前','貨物が保税地域に搬入される前','輸入許可後'], correctIndex:0, explanation:'関税法上、輸入申告は原則として貨物が置かれている保税地域に搬入された後に行います。' },
+  { subject:'関税法', difficulty:'基礎', question:'保税蔵置場における外国貨物の蔵置期間は原則何年か？', choices:['6ヶ月','1年','2年','3年'], correctIndex:2, explanation:'保税蔵置場での外国貨物の蔵置期間は原則2年です。' },
+  { subject:'関税法', difficulty:'基礎', question:'輸入禁制品に該当しないものは？', choices:['麻薬','偽造紙幣','著作権侵害物品','輸入割当品目'], correctIndex:3, explanation:'輸入割当品目は禁制品ではなく、経済産業大臣の承認（外為法）が必要な品目です。' },
+  { subject:'関税法', difficulty:'基礎', question:'輸入貨物の課税価格の原則的な計算方法として正しいものは？', choices:['輸出者の申告価格のみ','CIF価格（取引価格に運賃・保険料等を加えた額）','FOB価格（本船積み込み時の価格）','関税込みの国内販売価格'], correctIndex:1, explanation:'輸入貨物の課税価格は原則として取引価格に本邦の輸入港到着までの運賃・保険料等を加えたCIF価格で計算します。' },
+  { subject:'関税法', difficulty:'基礎', question:'従価税の計算式として正しいものは？', choices:['課税価格 ÷ 税率','課税価格 × 税率','数量 × 単位税額','課税価格 + 税率'], correctIndex:1, explanation:'従価税は課税価格に税率（%）を乗じて関税額を算出します。' },
+  { subject:'関税法', difficulty:'基礎', question:'指定保税地域における外国貨物の蔵置期間は？', choices:['1週間','1ヶ月','3ヶ月','6ヶ月'], correctIndex:1, explanation:'指定保税地域における外国貨物の蔵置期間は原則として1ヶ月です。' },
+  { subject:'関税法', difficulty:'基礎', question:'輸入許可を受けた後の貨物の区分は？', choices:['外国貨物のまま','内国貨物となる','保税貨物となる','制限貨物となる'], correctIndex:1, explanation:'輸入許可を受けた貨物は内国貨物となり、国内で自由に流通できます。' },
+  { subject:'関税法', difficulty:'基礎', question:'外国貨物の定義として正しいものは？', choices:['外国で製造されたすべての貨物','外国から到着した輸入許可前の貨物と輸出許可済みの貨物','日本で製造された輸出品','保税地域に置かれた内国貨物'], correctIndex:1, explanation:'外国貨物とは①外国から本邦に到着した貨物で輸入許可前のもの、②輸出許可を受けた貨物を指します。' },
+  { subject:'関税法', difficulty:'基礎', question:'従量税の計算に使用される課税標準は？', choices:['課税価格（CIF価格）','数量または重量','製造原価','国内市場価格'], correctIndex:1, explanation:'従量税では貨物の数量・重量・容積等を課税標準とし、単位税額を乗じて関税額を算出します。' },
+  { subject:'関税法', difficulty:'基礎', question:'保税地域の種類は全部でいくつか？', choices:['3種類','4種類','5種類','6種類'], correctIndex:2, explanation:'保税地域は①指定保税地域、②保税蔵置場、③保税工場、④保税展示場、⑤総合保税地域の5種類です。' },
+  { subject:'関税法', difficulty:'基礎', question:'輸出申告の申告先は？', choices:['仕向地国の税関','貨物が置かれている場所を所轄する税関','財務省','輸出者の本社所在地の税関'], correctIndex:1, explanation:'輸出申告は原則として、貨物が置かれている場所を所轄する税関長に対して行います。' },
+  { subject:'関税法', difficulty:'基礎', question:'関税の種類のうち「国内産業保護」を目的とするものは？', choices:['財政関税','保護関税','報復関税','相殺関税'], correctIndex:1, explanation:'保護関税は国内産業を外国の競争から守るため、外国製品に高い関税をかけるものです。' },
+  // ===== 関税法 標準 =====
+  { subject:'関税法', difficulty:'標準', question:'特例輸入者の関税申告の特例として正しいものは？', choices:['申告期限が輸入許可後6ヶ月','輸入許可前に申告し許可後に関税納付','毎月の輸入を翌月末までにまとめて申告','関税が免除される'], correctIndex:2, explanation:'特例輸入者制度では、毎月の輸入許可貨物を翌月末日までに特例申告書を提出してまとめて納税します。' },
+  { subject:'関税法', difficulty:'標準', question:'関税率表の解釈に関するHS条約で定める通則の数は？', choices:['通則1～6','通則1～8','通則1～10','通則1～4'], correctIndex:0, explanation:'関税率表の解釈に関する通則は通則1から6まであります。' },
+  { subject:'関税法', difficulty:'標準', question:'保税工場の特徴として正しいものは？', choices:['外国貨物を関税未徴収のまま加工・製造できる','外国貨物の展示のみ可能','蔵置期間は1ヶ月に限定される','国が管理・運営する'], correctIndex:0, explanation:'保税工場は外国貨物を関税未徴収の状態で加工・製造できる保税地域で、税関長の許可が必要です。' },
+  { subject:'関税法', difficulty:'標準', question:'課税価格に加算する必要がある費用として正しいものは？', choices:['輸入後の国内輸送費','輸入港到着後の保険料','本邦への輸入港到着までの運賃・保険料','輸入者が支払った関税額'], correctIndex:2, explanation:'課税価格には取引価格に加えて、本邦の輸入港到着までにかかる運賃・保険料等を加算します。' },
+  { subject:'関税法', difficulty:'標準', question:'特恵関税の適用を受けるために原則として必要なものは？', choices:['外務省の証明書','インボイスのみ','原産地証明書（C/O）','税関長の特別許可'], correctIndex:2, explanation:'特恵関税（開発途上国からの低税率）の適用を受けるには、原産地証明書（C/O）の提出が原則として必要です。' },
+  { subject:'関税法', difficulty:'標準', question:'保税運送の手続きで正しいものは？', choices:['申告不要で自由に運送できる','税関長の承認が必要','財務大臣の許可が必要','経済産業大臣の許可が必要'], correctIndex:1, explanation:'保税運送（外国貨物を関税未徴収のまま保税地域間で運送）は、税関長の承認が必要です。' },
+  { subject:'関税法', difficulty:'標準', question:'輸入許可前引取承認（BP）の要件として正しいものは？', choices:['関税の全額納付','担保の提供','税関長の職権のみ','輸出者の同意'], correctIndex:1, explanation:'BP（ビフォアパーミット）は輸入申告後に担保を提供することで、輸入許可前に貨物を引き取ることができる制度です。' },
+  { subject:'関税法', difficulty:'標準', question:'修正申告ができる期間として正しいものは？', choices:['輸入許可後1年以内','関税の法定納期限から2年以内','更正の時効（5年）が完成するまで','いつでも可能'], correctIndex:2, explanation:'修正申告は、関税の更正ができる期間（原則として法定納期限から5年）内であれば行うことができます。' },
+  { subject:'関税法', difficulty:'標準', question:'関税の不服申立ての手順として正しいものは？', choices:['直接行政訴訟が可能','税関長に異議申立て→財務大臣に審査請求→行政訴訟','財務大臣に審査請求→税関長に異議申立て','税関長に審査請求のみ'], correctIndex:1, explanation:'関税の不服申立ては、まず税関長に異議申立て（または直接財務大臣への審査請求）→財務大臣への審査請求→行政訴訟の順です。' },
+  { subject:'関税法', difficulty:'標準', question:'輸入割当（IQ）の実施根拠となる法令は？', choices:['関税法','外為法','通関業法','輸入貿易管理令'], correctIndex:3, explanation:'輸入割当（IQ）は輸入貿易管理令（外為法に基づく政令）に基づき、経済産業大臣の承認を要します。' },
+  { subject:'関税法', difficulty:'標準', question:'保税展示場の主な利用目的は？', choices:['長期間の貨物蔵置','加工・製造','博覧会・展示会等での外国貨物の展示・使用','外国貨物の国内販売'], correctIndex:2, explanation:'保税展示場は博覧会・展示会・競技会等で外国貨物を展示・使用するための保税地域です。' },
+  { subject:'関税法', difficulty:'標準', question:'保税地域内の外国貨物を廃棄しようとする場合の手続きは？', choices:['手続き不要','輸入申告後に廃棄できる','税関長に届け出て承認を受ける','財務大臣の許可が必要'], correctIndex:2, explanation:'保税地域内の外国貨物を廃棄する場合は、税関長の承認を受けなければなりません（関税法第45条）。' },
+  { subject:'関税法', difficulty:'標準', question:'総合保税地域の特徴として正しいものは？', choices:['国が直接管理する保税地域','蔵置・加工・展示・販売等の機能を総合的に持つ','輸出専用の保税施設','蔵置期間が無制限'], correctIndex:1, explanation:'総合保税地域は蔵置・加工・製造・展示・販売等の機能を総合的に持つ保税地域で、空港・港湾周辺に設置されます。' },
+  { subject:'関税法', difficulty:'標準', question:'申告納税方式において関税の納期限はいつか？', choices:['申告書提出日から1ヶ月以内','輸入の許可の時まで','毎月末日','翌年3月31日'], correctIndex:1, explanation:'申告納税方式では、関税は原則として輸入の許可の時（つまり許可前に納付）を期限として納付します。' },
+  { subject:'関税法', difficulty:'標準', question:'輸出入申告の電子申告システムの名称は？', choices:['e-Gov','NACCS（輸出入・港湾関連情報処理システム）','マイナポータル','EDI'], correctIndex:1, explanation:'輸出入申告等は「NACCS（Nippon Automated Cargo and Port Consolidated System）」による電子申告が主流です。' },
+  { subject:'関税法', difficulty:'標準', question:'輸出許可を受けた貨物の効力として正しいものは？', choices:['無期限有効','原則として許可の日から1年以内に輸出しなければならない','取り消し不可','輸出先を自由に変更できる'], correctIndex:1, explanation:'輸出許可を受けた貨物は原則として許可の日から1年以内に輸出しなければならず、期間内に輸出されない場合は許可が失効します。' },
+  // ===== 関税法 応用 =====
+  { subject:'関税法', difficulty:'応用', question:'関税評価において取引価格を使えない場合の第二次的な評価方法は？', choices:['輸出国での販売価格','同種または類似貨物の取引価格','製造原価の積み上げ','恣意的な価格'], correctIndex:1, explanation:'取引価格（第1方式）が使えない場合、同種貨物または類似貨物の取引価格（第2・第3方式）を使用します（関税定率法第4条の2）。' },
+  { subject:'関税法', difficulty:'応用', question:'相殺関税の発動要件として正しいものは？', choices:['外国政府の補助金により輸出が促進され国内産業に実質的損害がある場合','外国企業が不当廉売を行った場合','輸入量が急増した場合','輸出国が意図的な為替操作を行った場合'], correctIndex:0, explanation:'相殺関税は、補助金・奨励金の交付を受けた輸入品が国内産業に実質的損害を与える場合に発動されます。' },
+  { subject:'関税法', difficulty:'応用', question:'不当廉売関税（ダンピング関税）の発動要件として正しいものは？', choices:['補助金の交付','正常価格より低い価格で輸出し国内産業に損害がある場合','輸入が急増した場合','原産地を偽った場合'], correctIndex:1, explanation:'不当廉売関税（ダンピング関税）は、外国の正常価格を下回る価格での輸出により国内産業に実質的損害が生じている場合に発動されます。' },
+  { subject:'関税法', difficulty:'応用', question:'関税割当制度の仕組みとして正しいものは？', choices:['全品目一律の低税率を適用','一定数量まで低い税率を適用し、超過分には高い税率を適用','輸入数量を直接制限する','全額免税'], correctIndex:1, explanation:'関税割当制度は一定数量までは低い（または無税の）割当税率を適用し、超過分には通常の高い税率を適用する二段階構造です。' },
+  { subject:'関税法', difficulty:'応用', question:'緊急関税（セーフガード）の発動要件として正しいものは？', choices:['外国企業の補助金による損害','輸入の急増により国内産業に重大な損害またはそのおそれがある場合','不当廉売による損害','原産地違反が発覚した場合'], correctIndex:1, explanation:'緊急関税（セーフガード）は特定の輸入が急増し、国内産業に重大な損害またはそのおそれがある場合に発動できます。' },
+  { subject:'関税法', difficulty:'応用', question:'変質・損傷による関税の軽減申請ができるのはどの時期か？', choices:['輸入許可後6ヶ月以内','輸入申告前（または輸入申告時）','保税地域搬入時のみ','税関検査時のみ'], correctIndex:1, explanation:'変質・損傷貨物の関税軽減（関税定率法第10条）は、輸入申告の際に変質・損傷の事実を申告して申請します。' },
+  { subject:'関税法', difficulty:'応用', question:'課税価格の加算要素として課税価格に加えるべきものは？', choices:['買手が負担する口銭（売買仲介手数料）','輸入後の国内配送費','輸入港到着後の保険料','買付手数料以外の仲立料・手数料'], correctIndex:3, explanation:'口銭（売買仲介手数料）は加算不要ですが、買付手数料以外の手数料・仲立料は課税価格に加算します（関税定率法第4条第1項）。' },
+  { subject:'関税法', difficulty:'応用', question:'ATA条約（ATA手帳）の説明として正しいものは？', choices:['永久輸入のための多国間条約','展示会・職業用具・見本品等の一時輸入を簡素化する国際条約','戦略物資の輸出管理条約','関税評価の統一条約'], correctIndex:1, explanation:'ATA条約はATA手帳を使用して一時輸入（展示品・見本・職業用具等）を関税なしで簡素化する多国間条約です。' },
+  { subject:'関税法', difficulty:'応用', question:'再輸入免税（関税定率法第14条）が認められる基本的な要件は？', choices:['本邦から輸出された貨物が、輸出時の状態のまま輸入される場合','外国で加工された後に輸入される場合','外国産の貨物を購入して輸入する場合','保税地域で展示後に輸入する場合'], correctIndex:0, explanation:'再輸入免税は、本邦から輸出された貨物が輸出時と同一の状態（加工・変質なし）で再び輸入される場合に関税が免除されます。' },
+  { subject:'関税法', difficulty:'応用', question:'EPA関税を適用するために必要な書類の組み合わせとして正しいものは？', choices:['輸入申告書のみ','原産地証明書（または認定輸出者によるインボイス申告）','パッキングリストと船荷証券','輸出国政府の証明書のみ'], correctIndex:1, explanation:'EPA（経済連携協定）に基づく特別税率を適用するには、原産地証明書（機関発給）または認定輸出者の申告（インボイス申告）が必要です。' },
+  { subject:'関税法', difficulty:'応用', question:'関税の徴収権の消滅時効期間として正しいものは？', choices:['2年','3年','5年','10年'], correctIndex:2, explanation:'関税の徴収権の消滅時効は原則として5年です（関税法第14条）。' },
+  { subject:'関税法', difficulty:'応用', question:'保税工場で製造した製品を国内消費する場合の関税について正しいものは？', choices:['使用した原料の関税額のみ','完成品の価格に基づく関税のみ','原料または完成品のいずれか税額の低い方を選択できる','関税は一切かからない'], correctIndex:2, explanation:'保税工場で加工・製造した製品を輸入する場合は、原料価格基準と製品価格基準の関税額のうち有利な方を選択できます。' },
+
+  // ===== 通関業法 基礎 =====
+  { subject:'通関業法', difficulty:'基礎', question:'通関業の許可権者は誰か？', choices:['財務大臣','経済産業大臣','税関長','国土交通大臣'], correctIndex:2, explanation:'通関業を営むには、税関官署ごとに税関長の許可が必要です。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関士試験の実施機関は？', choices:['税関','財務省','通関業者連合会','国税庁'], correctIndex:1, explanation:'通関士試験は財務省が実施します。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関業者の秘密保持義務はいつまで続くか？', choices:['在職中のみ','許可取り消しまで','退職後も継続','5年間'], correctIndex:2, explanation:'通関業法第31条により、秘密保持義務は退職後も継続します。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関業者が通関士を設置しなくてよい場合は？', choices:['業務量が少ない場合のみ','売上1億円未満の場合','設立3年未満の場合','輸出のみ取り扱う場合'], correctIndex:0, explanation:'通関業務量が少ない等、一定の条件を満たす営業所では通関士の設置が免除されます。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関業とはどのような業務か？', choices:['輸出入貨物の梱包・搬送業務','他人の依頼を受けて輸出入申告等の通関手続きを行う業務','船舶・航空機の運航業務','倉庫での貨物管理業務'], correctIndex:1, explanation:'通関業とは、他人の依頼を受けて輸出入申告、関税の申告、通関書類の作成等の通関手続きを行う業務です。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関業者が通関業務に関する帳簿を保存しなければならない期間は？', choices:['1年','3年','5年','10年'], correctIndex:2, explanation:'通関業者は通関業務に関する帳簿を5年間保存する義務があります（通関業法第22条）。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関業者が料金表を掲示しなければならない場所は？', choices:['税関の窓口','財務省のウェブサイト','営業所の見やすい場所','商工会議所'], correctIndex:2, explanation:'通関業者は通関業務の料金表を営業所の見やすい場所に掲示する義務があります（通関業法第23条）。' },
+  { subject:'通関業法', difficulty:'基礎', question:'依頼応諾義務（通関業法第14条）の内容として正しいものは？', choices:['全ての依頼を無条件に受けなければならない','正当な理由がない限り通関業務の依頼を断ってはならない','依頼は先着順で受け付けなければならない','料金を受け取らずに業務を行わなければならない'], correctIndex:1, explanation:'通関業者は正当な理由がない限り通関業務の依頼を断ってはなりません（依頼応諾義務・通関業法第14条）。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関士試験は年何回実施されるか？', choices:['年2回','年1回','2年に1回','不定期'], correctIndex:1, explanation:'通関士試験は年1回（例年10月頃）実施されます。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関業の許可の有効期限について正しいものは？', choices:['3年ごとに更新が必要','5年ごとに更新が必要','有効期限はなく取り消されるまで有効','10年ごとに更新が必要'], correctIndex:2, explanation:'通関業の許可には有効期限がなく、取り消されるまで有効です（更新制ではない）。' },
+  { subject:'通関業法', difficulty:'基礎', question:'信用失墜行為の禁止（通関業法第33条）について正しいものは？', choices:['通関業者の役員のみに適用','通関士のみに適用','通関業者・通関士ともに適用','退職者には適用されない'], correctIndex:2, explanation:'信用失墜行為の禁止は通関業者・通関士の両方に適用され、通関業全体の信用を傷つける行為を禁止します。' },
+  { subject:'通関業法', difficulty:'基礎', question:'通関業者が依頼者から請求されたとき交付しなければならないものは？', choices:['通関業務の料金明細書のみ','通関業務の処理結果に関する証明書・関係書類の写し','許可証の写し','通関士の資格証明書'], correctIndex:1, explanation:'通関業者は依頼者から請求があれば通関業務の処理結果に関する証明書・関係書類の写しを交付する義務があります（通関業法第21条）。' },
+  // ===== 通関業法 標準 =====
+  { subject:'通関業法', difficulty:'標準', question:'名義貸しの禁止（通関業法第9条）の内容として正しいものは？', choices:['通関業者が自社名義を他者に貸して通関業を営ませることの禁止','他の通関業者への業務委託の禁止','顧客情報の他社への提供禁止','許可証の貸与禁止'], correctIndex:0, explanation:'通関業法第9条は、通関業者が自らの名義を他者に貸して通関業を営ませることを禁止します。違反すると許可取消等の対象となります。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関士の審査義務（通関業法第19条）の内容として正しいものは？', choices:['毎月の業務量を財務省に報告する','通関業者が作成した申告書等の内容を審査し記名する','通関業者に代わって申告書を自ら作成する','輸出入者の信用調査を行う'], correctIndex:1, explanation:'通関士は通関業者が作成した申告書等について内容を審査し記名しなければなりません（通関業法第19条）。' },
+  { subject:'通関業法', difficulty:'標準', question:'監督処分の種類として誤っているものはどれか？', choices:['業務改善命令','業務停止命令（6ヶ月以内）','通関業の許可取り消し','業務廃止命令'], correctIndex:3, explanation:'監督処分には業務改善命令・業務停止命令・許可取り消しがあります。「業務廃止命令」という処分は存在しません。' },
+  { subject:'通関業法', difficulty:'標準', question:'業務改善命令の発令権者は？', choices:['財務大臣','税関長','経済産業大臣','国土交通大臣'], correctIndex:1, explanation:'通関業者・通関士への監督処分（業務改善命令等）は税関長が発します。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関業の許可取り消し事由に該当しないものは？', choices:['不正の行為で許可を取得した','欠格事由に該当することになった','業務量が減少した','通関業法に違反した'], correctIndex:2, explanation:'業務量の減少は許可取り消し事由ではありません。不正取得・欠格事由該当・法令違反等が取り消し事由となります。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関士確認申請について正しいものは？', choices:['通関士試験合格者が自動的に通関士として認められる','財務省に合格証明書を提出するだけでよい','通関業者の下で業務を行うために税関長への確認申請が必要','申請不要で試験合格証があれば十分'], correctIndex:2, explanation:'通関士試験に合格しただけでは通関士として業務できず、通関業者に所属して税関長への確認申請を行う必要があります。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関業者の営業区域の原則として正しいものは？', choices:['全国どこでも業務可能','許可を受けた税関の管轄区域内のみ','隣接する税関まで業務可能','財務省が定める地域内のみ'], correctIndex:1, explanation:'通関業者が通関業を営むことができる地域（営業区域）は、原則として許可を受けた税関の管轄区域内です。' },
+  { subject:'通関業法', difficulty:'標準', question:'不正行為禁止（通関業法第28条）に違反した場合の結果として正しいものは？', choices:['戒告処分のみ','業務停止・許可取り消し・刑事罰の対象となりうる','過料のみ','行政指導のみ'], correctIndex:1, explanation:'虚偽申告書の作成等の不正行為禁止に違反した場合、業務停止・許可取り消しの行政処分に加え、刑事罰の対象となります。' },
+  { subject:'通関業法', difficulty:'標準', question:'税関が通関業者に対して行える検査・調査の根拠は？', choices:['税関長が自由に実施できる','通関業法第34条に基づく報告徴収・検査権限','裁判所の令状が必要','任意調査のみ'], correctIndex:1, explanation:'通関業法第34条により、税関長は通関業者に対して業務状況の報告を求め、帳簿・書類の検査を行うことができます。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関士が記名を拒否できる場合として正しいものは？', choices:['依頼者から高額の謝礼があった場合','申告書等の内容に誤りがあると判断した場合','業務が忙しい場合','通関業者の指示があった場合'], correctIndex:1, explanation:'通関士は申告書等の内容を審査した結果、内容に誤り・不備があると判断した場合、記名を拒否できます。これが審査義務の本質です。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関業者の役員が通関業法に違反した場合について正しいものは？', choices:['役員個人のみが処分対象','通関業者（法人）も監督処分の対象となりうる','通関士が責任を負う','財務省が直接役員を処分する'], correctIndex:1, explanation:'役員が通関業法に違反した場合、個人への処分に加えて通関業者（法人）も監督処分の対象となりえます。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関業許可の欠格事由に該当するものは？', choices:['業務量が少ない','禁錮以上の刑に処せられた後2年を経過していない者','過去に税関調査を受けたことがある','設立後1年未満の法人'], correctIndex:1, explanation:'禁錮以上の刑に処せられた後2年を経過していない者は通関業の許可を受けられません（通関業法第6条）。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関業者が複数の税関管轄で営業する場合の手続きは？', choices:['最初に取得した許可1件で全国で業務可能','各税関の管轄区域ごとにそれぞれ税関長の許可が必要','財務省への届出のみで全国対応可能','1つの税関長の許可で全国対応可能'], correctIndex:1, explanation:'通関業者が複数の税関管轄区域で業務を行う場合、それぞれの税関長から許可を受ける必要があります。' },
+  { subject:'通関業法', difficulty:'標準', question:'通関業者の兼業について正しいものは？', choices:['一切の兼業が禁止されている','原則として他の事業との兼業は自由だが適正運営が必要','兼業するには財務大臣の許可が必要','兼業すると通関業許可が取り消される'], correctIndex:1, explanation:'通関業法上、通関業者の兼業を一律に禁止する規定はありませんが、兼業により通関業の適正な運営が損なわれないよう管理する必要があります。' },
+  // ===== 通関業法 応用 =====
+  { subject:'通関業法', difficulty:'応用', question:'AEO認定通関業者の特例として正しいものは？', choices:['関税率が優遇される','申告内容の審査が省略される','手続きの簡素化・迅速化（優先検査等）の特例がある','通関士設置義務が免除される'], correctIndex:2, explanation:'AEO（認定通関業者）制度では、コンプライアンス優良業者に輸出入手続きの簡素化・迅速化（優先検査・事前確認等）の特例が付与されます。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関業の事業承継について正しいものは？', choices:['承継により許可は自動的に失効する','合併・相続等による承継後も許可は有効だが税関長への届出が必要','承継には新たな許可申請が常に必要','承継は認められていない'], correctIndex:1, explanation:'合併・相続・分割等による事業承継の場合、承継後も通関業の許可は有効ですが、税関長への届出が必要です（通関業法第11条等）。' },
+  { subject:'通関業法', difficulty:'応用', question:'自己通関（自社申告）について正しいものは？', choices:['通関業の許可がなければ輸出入申告はできない','自社の貨物については通関業の許可なしに申告できる','自己通関には税関長の特別許可が必要','自己通関は輸出のみ認められる'], correctIndex:1, explanation:'通関業の許可は「他人の依頼を受けて」申告等を行う場合に必要なものであり、自社の貨物の申告は許可不要です。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関業者が廃業する場合に必要な手続きは？', choices:['財務省への申請と許可','税関長への届出','経済産業省への申請','手続き不要'], correctIndex:1, explanation:'通関業者が廃業する場合は税関長への届出が必要です（通関業法第13条）。廃業時に許可は失効します。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関業務の範囲として通関業法上含まれるものはどれか？', choices:['輸出入申告のみ','輸出入申告・関税の申告・修正申告・関連書類の作成等を含む','通関書類の翻訳のみ','関税の納付代行のみ'], correctIndex:1, explanation:'通関業務（通関業法第2条）には輸出入申告、関税の申告・修正申告、不服申立て手続き、関連書類の作成等、広範な手続きが含まれます。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関士試験の試験科目として含まれるものは？', choices:['関税法・通関業法のみ','関税法・通関業法・外為法（関税率表分類含む）','関税法のみ','通関書類作成の実技のみ'], correctIndex:1, explanation:'通関士試験は関税法・通関業法・外為法（関税率表分類を含む）等から出題される3科目構成です。' },
+  { subject:'通関業法', difficulty:'応用', question:'特定通関業者制度の説明として正しいものは？', choices:['売上高上位の通関業者が自動的に指定される','AEO制度の中でさらに高水準のコンプライアンスを満たす認定業者','外国に支店を持つ通関業者のみ対象','関税を代納できる業者'], correctIndex:1, explanation:'特定通関業者はAEO制度の中でさらに高いコンプライアンス基準を満たすと認定された通関業者で、追加的な手続き特例が付与されます。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関業者が故意または過失により依頼者に損害を与えた場合の責任は？', choices:['行政処分のみを受ける','刑事責任のみ負う','民法上の損害賠償責任を負う','責任を負わない'], correctIndex:2, explanation:'通関業者が故意または過失により依頼者に損害を与えた場合、民法上の損害賠償責任を負います。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関士の審査義務において申告書に誤りがあった場合の正しい対応は？', choices:['そのまま記名・押印する','誤りを通関業者に指摘し修正を求め、修正されなければ記名を拒否できる','修正せず提出して後から訂正する','税関に直接報告する'], correctIndex:1, explanation:'通関士は申告書の誤りを発見した場合、通関業者に修正を求め、修正されなければ記名を拒否することができます。これが審査義務の本質です。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関業者の従業員に対する監督義務について正しいものは？', choices:['従業員の行為には一切責任を負わない','通関業法違反の行為をしないよう必要な措置を講じる義務がある','懲戒解雇した場合のみ責任を免れる','財務省が直接従業員を管理する'], correctIndex:1, explanation:'通関業者はその役員・従業員が通関業法違反行為を行わないよう、必要な指導・監督等の措置を講じる義務があります。' },
+  { subject:'通関業法', difficulty:'応用', question:'通関業者が複数の税関管轄区域で業務を拡大する場合の手続きは？', choices:['本店所在地の税関長に届出するだけでよい','新たな税関管轄区域でその税関長の許可を新たに取得する必要がある','全国展開は法律上禁止されている','財務省への届出のみで全国対応可能'], correctIndex:1, explanation:'通関業者が既存の許可区域外の新たな税関管轄区域で業務を行う場合は、その区域を管轄する税関長から新たに許可を受ける必要があります。' },
+
+  // ===== 外為法 基礎 =====
+  { subject:'外為法', difficulty:'基礎', question:'輸出許可（外為法第48条）の許可権者は？', choices:['税関長','財務大臣','経済産業大臣','外務大臣'], correctIndex:2, explanation:'外為法に基づく輸出許可は経済産業大臣が付与します（安全保障貿易管理）。' },
+  { subject:'外為法', difficulty:'基礎', question:'外為法の原則として正しいものは？', choices:['原則規制・例外自由','原則自由・例外規制','完全規制','完全自由'], correctIndex:1, explanation:'外為法は「原則自由・例外規制」の考え方をとっています。' },
+  { subject:'外為法', difficulty:'基礎', question:'外為法における資本取引規制の許可権者は？', choices:['経済産業大臣','財務大臣','内閣総理大臣','外務大臣'], correctIndex:1, explanation:'資本取引・支払い等の規制は財務大臣の所管です。' },
+  { subject:'外為法', difficulty:'基礎', question:'外為法の目的として正しいものは？', choices:['国内産業の保護のみ','対外取引の正常な発展・国際収支均衡・通貨の安定および安全保障の確保','関税収入の確保','輸入の促進'], correctIndex:1, explanation:'外為法は対外取引の正常な発展と国際収支均衡・通貨の安定、さらに安全保障・外交政策目的の貿易規制を目的としています。' },
+  { subject:'外為法', difficulty:'基礎', question:'輸出貿易管理令は何法に基づいて定められているか？', choices:['関税法','通関業法','外国為替及び外国貿易法（外為法）','不正競争防止法'], correctIndex:2, explanation:'輸出貿易管理令は外為法第48条の委任に基づく政令であり、輸出規制品目リスト等を定めます。' },
+  { subject:'外為法', difficulty:'基礎', question:'戦略物資を輸出する場合に必要なものは？', choices:['税関長の許可','財務大臣の許可','経済産業大臣の輸出許可','外務大臣の承認'], correctIndex:2, explanation:'戦略物資（輸出貿易管理令別表掲載品目）の輸出には経済産業大臣の輸出許可が必要です。' },
+  { subject:'外為法', difficulty:'基礎', question:'輸出許可申請書の提出先は？', choices:['税関','財務省','経済産業省','外務省'], correctIndex:2, explanation:'戦略物資等の輸出許可申請は経済産業省（経済産業大臣）に提出します。' },
+  { subject:'外為法', difficulty:'基礎', question:'外為法における「輸出」の概念として正しいものは？', choices:['国内での貨物売買','貨物を外国に向けて送り出すこと','外国で製造した貨物を国内に持ち込むこと','保税地域への搬入'], correctIndex:1, explanation:'外為法における「輸出」とは貨物を外国に向けて送り出す行為を指し、輸出許可の対象となります。' },
+  // ===== 外為法 標準 =====
+  { subject:'外為法', difficulty:'標準', question:'キャッチオール規制の説明として正しいものは？', choices:['リスト規制品目のみが対象','リスト規制に該当しない品目でも大量破壊兵器等への転用懸念がある場合は許可が必要','すべての輸出品に適用','国内取引にも適用される'], correctIndex:1, explanation:'キャッチオール規制はリスト規制品目以外の一般貨物でも、大量破壊兵器等の開発に使われるおそれがある場合に輸出許可を要求するものです。' },
+  { subject:'外為法', difficulty:'標準', question:'リスト規制品目かどうかを確認する方法として正しいものは？', choices:['税関のリストを確認','輸出者が自ら「該非判定」を行い、不明な場合は経済産業省に確認申請できる','外務省の確認が必要','輸入者が判断する'], correctIndex:1, explanation:'輸出者はリスト規制品目への該当性を自ら「該非判定」し、不明な場合は経済産業省への確認申請（照会制度）を利用できます。' },
+  { subject:'外為法', difficulty:'標準', question:'役務取引許可が必要な場合として正しいものは？', choices:['通常の貿易取引すべて','戦略物資関連の技術・設計情報等を外国に提供する場合','国内での技術研修','国内企業同士の技術ライセンス取引'], correctIndex:1, explanation:'役務取引許可（外為法第25条）は戦略物資関連の技術・情報等を外国（外国人を含む）に提供する場合に必要です。' },
+  { subject:'外為法', difficulty:'標準', question:'経済制裁（資産凍結等）の措置の法的根拠は？', choices:['関税法','外為法第16条・第21条等（財務大臣の許可制）','通関業法','輸入貿易管理令'], correctIndex:1, explanation:'経済制裁としての支払い停止・資産凍結等は外為法第16条等に基づき財務大臣の許可制により実施されます。' },
+  { subject:'外為法', difficulty:'標準', question:'包括許可制度の説明として正しいものは？', choices:['すべての輸出品を包括的に許可する制度','信頼できる特定の取引先・品目・用途等に対して個別申請なしで輸出できる制度','国内販売を包括的に許可する制度','関税を一括して免除する制度'], correctIndex:1, explanation:'包括許可は、適格な輸出者が一定の条件（信頼できる仕向国・用途・取引先等）を満たす場合に、個別許可申請なしで輸出できる制度です。' },
+  { subject:'外為法', difficulty:'標準', question:'輸入承認が必要な貨物の根拠となる法令は？', choices:['関税法','通関業法','輸入貿易管理令（外為法に基づく政令）','食品衛生法'], correctIndex:2, explanation:'輸入承認（特定の国や品目の輸入規制）は外為法に基づく輸入貿易管理令により、経済産業大臣の承認を要します。' },
+  { subject:'外為法', difficulty:'標準', question:'3,000万円を超える外国への支払いについて正しいものは？', choices:['特に規制なし','日本銀行を経由した財務大臣への届出が必要','経済産業大臣の許可が必要','外務省への報告が必要'], correctIndex:1, explanation:'居住者が非居住者に対して3,000万円超の支払い等を行う場合、日本銀行を経由した財務大臣への届出が必要です（外為法第55条）。' },
+  { subject:'外為法', difficulty:'標準', question:'外国ユーザーリストの目的として正しいものは？', choices:['取引禁止企業のリスト','懸念される外国の組織・企業等への輸出時に注意喚起するための参考リスト','関税優遇対象の企業リスト','AEO認定企業のリスト'], correctIndex:1, explanation:'外国ユーザーリストは経済産業省が公表する、大量破壊兵器等の開発懸念がある外国組織のリストで、該当取引先への輸出時は注意が必要です。' },
+  // ===== 外為法 応用 =====
+  { subject:'外為法', difficulty:'応用', question:'無許可輸出（外為法違反）の刑事罰として正しいものは？', choices:['5万円以下の過料','1年以下の懲役または100万円以下の罰金','5年以下の懲役または500万円以下の罰金（法人は1億円以下の罰金）','行政指導のみ'], correctIndex:2, explanation:'無許可輸出等の外為法違反の刑事罰は、5年以下の懲役または500万円以下の罰金（法人に対しては1億円以下の罰金）です（外為法第69条の6等）。' },
+  { subject:'外為法', difficulty:'応用', question:'みなし輸出規制の説明として正しいものは？', choices:['郵便での輸出のみ対象','国内にいる外国人（非居住者）に対する技術提供も「輸出」とみなされ規制対象になる場合がある','輸出申告時に見落とした品目に遡及適用','中古品のみ対象'], correctIndex:1, explanation:'みなし輸出規制（外為法第25条第2項）は、国内にいる外国人（非居住者）への技術提供も「輸出」とみなし、役務取引許可が必要な場合があります。' },
+  { subject:'外為法', difficulty:'応用', question:'内部コンプライアンスプログラム（ICP）の目的として正しいものは？', choices:['税務申告の適正化','企業が安全保障貿易管理を適切に実施するための内部管理体制整備','輸送コスト削減','関税の節税対策'], correctIndex:1, explanation:'ICP（内部規制プログラム）は企業が安全保障貿易管理を組織的・体系的に実施するための内部管理体制で、経済産業省が整備を推奨します。' },
+  { subject:'外為法', difficulty:'応用', question:'外為法上のホワイト国（グループA）について正しいものは？', choices:['関税率が優遇される国','輸出管理体制が整備されていると認められ、戦略物資輸出規制の一部が緩和される国','経済援助対象国','EPA締結国'], correctIndex:1, explanation:'ホワイト国（グループA）は外為法の輸出管理において信頼できる輸出管理体制を有すると認定された国で、一定の戦略物資に包括許可が適用可能です。' },
+  { subject:'外為法', difficulty:'応用', question:'日本から輸出した貨物の第三国への再輸出について正しいものは？', choices:['一切規制されない','一定の貨物について輸出先国からさらに第三国への再輸出に日本の規制が及ぶ場合がある','輸出後は完全に輸出先国の責任','再輸出には常に日本政府の許可が必要'], correctIndex:1, explanation:'一定の日本製品・技術については、輸出先国からさらに第三国に再輸出する際に日本の輸出管理規制が適用される場合があります（域外適用的要素）。' },
+  { subject:'外為法', difficulty:'応用', question:'「技術の提供」に該当しないものはどれか？', choices:['設計図の電子メール送信','特定技術の対面指導','一般に広く公開されている学術論文の提供','工場の製造ノウハウの提供'], correctIndex:2, explanation:'一般に広く公開されている（公知の）技術・情報は外為法の役務取引規制の対象外です（パブリックドメイン除外）。' },
+  { subject:'外為法', difficulty:'応用', question:'経済安全保障推進法における「特定重要物資」制度の目的として正しいものは？', choices:['関税収入の増加','半導体・蓄電池等の重要物資のサプライチェーン強靭化による経済安全保障の確保','輸出促進','技術流出防止のみ'], correctIndex:1, explanation:'経済安全保障推進法の「特定重要物資」制度は、半導体・蓄電池・重要鉱物等のサプライチェーン強靭化を通じた経済安全保障の確保を目的とします。' },
+  { subject:'外為法', difficulty:'応用', question:'外国為替市場への介入（為替介入）の実施について正しいものは？', choices:['日本銀行が独自に判断して実施','財務大臣の指示に基づき日本銀行が代理人として実施','内閣が承認し財務省が直接実施','外務大臣の権限で実施'], correctIndex:1, explanation:'為替介入の権限は財務大臣にあり、日本銀行は財務大臣の代理人として介入を実施します（外為法第7条）。' },
 ];
 
 let filteredQuiz = [...QUIZ_DATA];
 
-function setQuizSubject(subject, btn) {
-  state.quizSubject = subject;
-  document.querySelectorAll('.subject-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  filteredQuiz = subject === 'all' ? [...QUIZ_DATA] : QUIZ_DATA.filter(q => q.subject === subject);
+function applyQuizFilters() {
+  filteredQuiz = QUIZ_DATA.filter(q => {
+    const subMatch = state.quizSubject === 'all' || q.subject === state.quizSubject;
+    const diffMatch = state.quizDifficulty === 'all' || q.difficulty === state.quizDifficulty;
+    return subMatch && diffMatch;
+  });
   state.quizIndex = 0;
   state.quizAnswered = false;
   renderQuiz();
+}
+
+function setQuizSubject(subject, btn) {
+  state.quizSubject = subject;
+  document.querySelectorAll('#subject-tabs .subject-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyQuizFilters();
+}
+
+function setQuizDifficulty(difficulty, btn) {
+  state.quizDifficulty = difficulty;
+  document.querySelectorAll('#difficulty-tabs .subject-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyQuizFilters();
 }
 
 function renderQuiz() {
@@ -574,6 +703,9 @@ function renderQuiz() {
   document.getElementById('quiz-counter').textContent = `問題 ${current} / ${total}`;
   document.getElementById('quiz-progress').style.width = (current / total * 100) + '%';
   document.getElementById('quiz-subject-badge').textContent = q.subject;
+  const diffBadge = document.getElementById('quiz-difficulty-badge');
+  diffBadge.textContent = q.difficulty;
+  diffBadge.className = 'difficulty-badge ' + (q.difficulty || '');
   document.getElementById('quiz-question').textContent = q.question;
   document.getElementById('quiz-result').style.display = 'none';
   document.getElementById('quiz-result').innerHTML = '';
