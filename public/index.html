@@ -212,6 +212,75 @@
   .dot-blink::after { content: '…'; animation: blink 1s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
+  /* ===== LEARN TAB ===== */
+  .learn-progress-card { margin-bottom: 14px; }
+  .learn-chapter {
+    background: var(--card); border-radius: 12px;
+    margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid var(--border); overflow: hidden;
+  }
+  .learn-chapter-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 16px; cursor: pointer;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white; font-weight: 700; font-size: 0.95rem; user-select: none;
+  }
+  .learn-chapter-header:hover { opacity: 0.92; }
+  .learn-chapter-header > span:first-child { flex: 1; }
+  .learn-ch-num {
+    font-size: 0.72rem; background: rgba(255,255,255,0.2);
+    padding: 2px 8px; border-radius: 12px; white-space: nowrap;
+  }
+  .learn-chapter-body { display: none; padding: 8px; }
+  .learn-chapter-body.open { display: block; }
+  .learn-section {
+    border-radius: 8px; margin-bottom: 6px;
+    border: 1px solid var(--border); overflow: hidden;
+  }
+  .learn-section-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 14px; cursor: pointer; background: white;
+    font-size: 0.88rem; font-weight: 600; user-select: none; transition: background 0.2s;
+  }
+  .learn-section-header:hover { background: #f5f8fc; }
+  .learn-section-header > span:nth-child(2) { flex: 1; }
+  .learn-sec-check {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; flex-shrink: 0;
+    background: var(--border); color: var(--muted); transition: all 0.2s;
+  }
+  .learn-sec-check.done { background: var(--success); color: white; }
+  .learn-section-body { display: none; padding: 14px 16px; background: #fafcff; border-top: 1px solid var(--border); }
+  .learn-section-body.open { display: block; }
+  .learn-section-body h4 { font-size: 0.88rem; color: var(--primary); margin: 14px 0 6px; border-left: 3px solid var(--accent); padding-left: 8px; }
+  .learn-section-body h4:first-child { margin-top: 0; }
+  .learn-section-body p { font-size: 0.84rem; line-height: 1.8; color: #444; margin-bottom: 8px; }
+  .learn-section-body ul { font-size: 0.84rem; line-height: 1.8; color: #444; padding-left: 20px; margin-bottom: 8px; }
+  .learn-section-body li { margin-bottom: 3px; }
+  .learn-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin: 8px 0 12px; }
+  .learn-table th { background: var(--primary); color: white; padding: 7px 9px; text-align: left; }
+  .learn-table td { padding: 7px 9px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .learn-table tr:nth-child(even) td { background: #f5f8fc; }
+  .learn-point {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: 14px 0; padding: 10px 12px; background: #fffbea;
+    border-radius: 10px; border: 1px solid #f0d080;
+  }
+  .learn-kanta-img { width: 46px; height: auto; flex-shrink: 0; }
+  .learn-bubble { font-size: 0.82rem; line-height: 1.65; color: #555; flex: 1; }
+  .learn-bubble strong { color: var(--primary); }
+  .learn-links { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+  .learn-link-btn {
+    padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--accent);
+    background: white; color: var(--accent); cursor: pointer; font-size: 0.74rem;
+    transition: all 0.2s; font-weight: 600;
+  }
+  .learn-link-btn:hover { background: var(--accent); color: white; }
+  .learn-done-btn { margin-top: 10px; width: 100%; }
+  .learn-done-btn.done { background: var(--success); }
+  .learn-done-btn.done:hover { background: #219a52; }
+
   /* PNG character states */
   .kanta-img {
     height: 180px;
@@ -234,6 +303,7 @@
 
 <nav class="tabs">
   <button class="active" onclick="switchTab('home', this)">🏠 ホーム</button>
+  <button onclick="switchTab('learn', this)">📚 学習</button>
   <button onclick="switchTab('quiz', this)">📝 問題集</button>
   <button onclick="switchTab('glossary', this)">📖 用語集</button>
   <button onclick="switchTab('laws', this)">⚖️ 法令</button>
@@ -417,6 +487,570 @@
       </div>
     </details>
   </div>
+</div>
+
+<!-- ===== LEARN ===== -->
+<div id="tab-learn" class="tab-content">
+
+  <!-- 進捗カード -->
+  <div class="card learn-progress-card">
+    <h2>📚 学習の進捗</h2>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="learn-progress-bar" style="width:0%"></div></div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-top:6px" id="learn-progress-text">0 / 15 セクション完了</div>
+  </div>
+
+  <!-- 第1章 -->
+  <div class="learn-chapter">
+    <div class="learn-chapter-header" onclick="toggleChapter('ch1')">
+      <span>第1章 通関士試験とは</span>
+      <span class="learn-ch-num" id="ch1-progress">0/3</span>
+      <span id="ch1-chevron">▼</span>
+    </div>
+    <div class="learn-chapter-body" id="ch1-body">
+
+      <!-- 1-1 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('1-1')">
+          <div class="learn-sec-check" id="check-1-1">○</div>
+          <span>1-1 試験の概要・合格率・難易度</span>
+          <span class="chevron" id="sec-chevron-1-1">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-1-1">
+          <h4>試験の基本情報</h4>
+          <ul>
+            <li><strong>主催：</strong>財務省（税関）</li>
+            <li><strong>実施時期：</strong>毎年10月（第1日曜日）</li>
+            <li><strong>受験資格：</strong>なし（年齢・学歴・国籍を問わず誰でも受験可）</li>
+            <li><strong>試験形式：</strong>マークシート式（択一・選択）</li>
+            <li><strong>合格率：</strong>約10〜15%（難関国家資格）</li>
+          </ul>
+          <h4>難易度について</h4>
+          <p>合格率が示す通り、通関士試験は難関資格です。しかし出題範囲は法律に限定されており、正しい学習方法で取り組めば必ず合格できます。過去問の繰り返しが最も効果的な学習法です。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">合格率は低いですが、出題パターンは決まっています。基礎をしっかり固めて過去問を繰り返せば、必ず合格できますよ！</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 問題集で練習</button>
+            <button class="learn-link-btn" onclick="goToTab('ai')">🤖 関太先生に質問</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-1-1" onclick="markDone('1-1')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 1-2 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('1-2')">
+          <div class="learn-sec-check" id="check-1-2">○</div>
+          <span>1-2 試験科目と配点</span>
+          <span class="chevron" id="sec-chevron-1-2">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-1-2">
+          <h4>3科目構成</h4>
+          <table class="learn-table">
+            <tr><th>科目</th><th>問題数</th><th>合格基準</th></tr>
+            <tr><td>①通関業法</td><td>択一30問＋選択10問</td><td>概ね60%以上</td></tr>
+            <tr><td>②関税法等</td><td>択一60問＋選択10問</td><td>概ね60%以上</td></tr>
+            <tr><td>③通関書類の作成</td><td>選択20問＋計算</td><td>概ね60%以上</td></tr>
+          </table>
+          <h4>足切り制度（重要！）</h4>
+          <p>通関士試験は<strong>全科目で合格基準を満たす必要</strong>があります。1科目でも基準点を下回ると、他の科目が満点でも不合格となります。苦手科目を作らないことが合格の鍵です。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble"><strong>足切りに注意！</strong>一科目でも基準点を下回ると不合格です。関税法等は問題数が多いので、特にしっかり時間をかけて学習しましょう。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 問題集で練習</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-1-2" onclick="markDone('1-2')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 1-3 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('1-3')">
+          <div class="learn-sec-check" id="check-1-3">○</div>
+          <span>1-3 勉強の進め方</span>
+          <span class="chevron" id="sec-chevron-1-3">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-1-3">
+          <h4>推奨学習ステップ</h4>
+          <ul>
+            <li><strong>STEP 1 通関業法</strong>（比較的コンパクト・全体像を掴む）</li>
+            <li><strong>STEP 2 関税法</strong>（最重要・分量が多いため十分な時間を）</li>
+            <li><strong>STEP 3 外為法</strong>（概要把握が中心・比較的短期間でOK）</li>
+            <li><strong>STEP 4 過去問演習</strong>（直近5年分以上を繰り返す）</li>
+          </ul>
+          <h4>学習時間の目安</h4>
+          <p>合格に必要な学習時間は<strong>500〜800時間</strong>が目安です。1日2時間であれば約1年間の学習が必要です。毎日継続することが最も重要です。</p>
+          <h4>効果的な学習法</h4>
+          <ul>
+            <li>テキストで基礎を理解してから過去問に取り組む</li>
+            <li>間違えた問題は必ず条文に戻って確認する</li>
+            <li>重要な数字（期限・割合等）は表にまとめて暗記</li>
+            <li>通関計算は毎日練習して計算力を維持</li>
+          </ul>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">この学習タブで基礎知識を固めてから、問題集タブで実践練習するのが最も効率的です！わからないことはAI質問タブで聞いてください！</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 問題集で練習</button>
+            <button class="learn-link-btn" onclick="goToTab('ai')">🤖 関太先生に質問</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-1-3" onclick="markDone('1-3')">✓ 読了にする</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 第2章 -->
+  <div class="learn-chapter">
+    <div class="learn-chapter-header" onclick="toggleChapter('ch2')">
+      <span>第2章 関税法の基礎</span>
+      <span class="learn-ch-num" id="ch2-progress">0/5</span>
+      <span id="ch2-chevron">▼</span>
+    </div>
+    <div class="learn-chapter-body" id="ch2-body">
+
+      <!-- 2-1 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('2-1')">
+          <div class="learn-sec-check" id="check-2-1">○</div>
+          <span>2-1 関税法の目的と体系</span>
+          <span class="chevron" id="sec-chevron-2-1">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-2-1">
+          <h4>目的（第1条）</h4>
+          <p>関税法は、<strong>関税の確定・納付・徴収及び還付</strong>並びに<strong>貨物の輸出及び輸入についての税関手続の適正な処理</strong>を図るために必要な事項を定める法律です。</p>
+          <h4>関税法の位置づけ</h4>
+          <ul>
+            <li>輸出入を規律する基本法（通関手続きの根拠法）</li>
+            <li>適用対象：税関を通過するすべての貨物</li>
+            <li>関連法：通関業法・外為法・関税定率法等と連携</li>
+          </ul>
+          <h4>関税法の主な構成</h4>
+          <ul>
+            <li>総則（用語の定義・税関の権限等）</li>
+            <li>関税の確定・徴収（課税要件・申告・納付）</li>
+            <li>輸出入手続（申告・検査・許可）</li>
+            <li>保税制度（保税地域・保税運送）</li>
+            <li>罰則</li>
+          </ul>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">関税法第1条の目的条文はそのまま試験に出ます！「確定・納付・徴収・還付」と「輸出入の税関手続の適正な処理」の2つのキーワードを覚えましょう。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 法令を参照</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 用語集を見る</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-2-1" onclick="markDone('2-1')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 2-2 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('2-2')">
+          <div class="learn-sec-check" id="check-2-2">○</div>
+          <span>2-2 輸入・輸出の定義</span>
+          <span class="chevron" id="sec-chevron-2-2">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-2-2">
+          <h4>輸入の定義（第2条第1項第1号）</h4>
+          <p>外国から本邦に到着した<strong>外国貨物</strong>（外国の船舶により公海で採捕された水産物を含む）を<strong>本邦に引き取ること</strong>をいう。</p>
+          <h4>輸出の定義（第2条第1項第2号）</h4>
+          <p><strong>内国貨物</strong>を<strong>外国に向けて送り出すこと</strong>をいう。</p>
+          <h4>外国貨物・内国貨物とは</h4>
+          <table class="learn-table">
+            <tr><th>種別</th><th>定義</th></tr>
+            <tr><td>外国貨物</td><td>①輸出許可を受けた貨物、②外国から到着した貨物で輸入許可前のもの</td></tr>
+            <tr><td>内国貨物</td><td>本邦にある貨物で外国貨物でないもの（輸入許可済みのものを含む）</td></tr>
+          </table>
+          <h4>輸入許可のタイミングが重要</h4>
+          <p>外国から到着した貨物は「<strong>輸入許可が下りるまで</strong>は外国貨物」です。輸入許可後に初めて内国貨物となり、自由に国内流通できます。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">「外国貨物」と「内国貨物」の区別は頻出問題！<strong>輸入許可のタイミング</strong>が境界線です。輸入許可前は外国貨物、許可後は内国貨物になります。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 関税法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 用語集で確認</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-2-2" onclick="markDone('2-2')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 2-3 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('2-3')">
+          <div class="learn-sec-check" id="check-2-3">○</div>
+          <span>2-3 税関手続きの流れ</span>
+          <span class="chevron" id="sec-chevron-2-3">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-2-3">
+          <h4>輸入手続きの流れ</h4>
+          <ul>
+            <li>① <strong>入港</strong>：外国から船舶・航空機が到着</li>
+            <li>② <strong>搬入・蔵置</strong>：保税地域へ搬入（関税未納のまま保管）</li>
+            <li>③ <strong>輸入申告</strong>：税関長に申告書を提出</li>
+            <li>④ <strong>審査・検査</strong>：税関による書類審査・貨物検査</li>
+            <li>⑤ <strong>関税等の納付</strong>：関税・消費税等を納付</li>
+            <li>⑥ <strong>輸入許可</strong>：税関長による許可（ここで内国貨物になる）</li>
+            <li>⑦ <strong>引取り</strong>：保税地域から貨物を引き取る</li>
+          </ul>
+          <h4>輸出手続きの流れ</h4>
+          <ul>
+            <li>① <strong>輸出申告</strong>：税関長に申告書を提出（積み込み前）</li>
+            <li>② <strong>審査・検査</strong>：税関による確認</li>
+            <li>③ <strong>輸出許可</strong>：税関長による許可（ここで外国貨物になる）</li>
+            <li>④ <strong>積込み・出港</strong>：本船・航空機に積み込んで出港</li>
+          </ul>
+          <h4>輸入許可前引取り（BP：Before Permit）</h4>
+          <p>担保を提供することで、輸入許可前でも貨物を引き取ることができる特例制度（第73条）。輸入許可前でも引き取りが可能ですが、関税の支払い義務は残ります。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">輸入は「申告→許可→引取り」の順番！輸入許可が出て初めて内国貨物になります。BPは担保が必要な特例です。試験では順番を問う問題が多いですよ。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 関税法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第67条を参照</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-2-3" onclick="markDone('2-3')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 2-4 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('2-4')">
+          <div class="learn-sec-check" id="check-2-4">○</div>
+          <span>2-4 保税制度</span>
+          <span class="chevron" id="sec-chevron-2-4">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-2-4">
+          <h4>保税制度とは</h4>
+          <p>外国貨物を<strong>関税を課さずに（未納のまま）</strong>蔵置・加工・展示等できる制度。輸入許可前の外国貨物を一時的に管理するための仕組みです。</p>
+          <h4>保税地域の5種類</h4>
+          <table class="learn-table">
+            <tr><th>種類</th><th>特徴</th><th>蔵置期間</th></tr>
+            <tr><td>①指定保税地域</td><td>国・地方公共団体等が管理。港湾・空港内に設置</td><td>1ヶ月以内</td></tr>
+            <tr><td>②保税蔵置場</td><td>民間事業者が許可を受けて設置。最も一般的</td><td>2年以内</td></tr>
+            <tr><td>③保税工場</td><td>外国貨物の加工・製造・改装等が可能</td><td>許可期間内</td></tr>
+            <tr><td>④保税展示場</td><td>博覧会・見本市等での展示が可能</td><td>許可期間内</td></tr>
+            <tr><td>⑤総合保税地域</td><td>上記①〜④の機能を総合的に持つ大規模地域</td><td>許可期間内</td></tr>
+          </table>
+          <h4>保税運送</h4>
+          <p>外国貨物を保税地域間で運送すること。税関長の承認が必要。運送中も外国貨物のまま（関税は課されない）。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">5種類の保税地域の特徴と蔵置期間の違いは試験頻出！語呂合わせ「<strong>指定・蔵置・工場・展示・総合</strong>」で順番を覚えましょう。指定は1ヶ月、蔵置場は2年がポイントです。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 保税制度の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 保税地域を調べる</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-2-4" onclick="markDone('2-4')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 2-5 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('2-5')">
+          <div class="learn-sec-check" id="check-2-5">○</div>
+          <span>2-5 関税の種類と計算方法</span>
+          <span class="chevron" id="sec-chevron-2-5">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-2-5">
+          <h4>課税方式の種類</h4>
+          <table class="learn-table">
+            <tr><th>方式</th><th>計算方法</th><th>例</th></tr>
+            <tr><td>従価税</td><td>課税価格（CIF）× 税率</td><td>衣類・電子機器等</td></tr>
+            <tr><td>従量税</td><td>数量（重量・個数等）× 単位税額</td><td>砂糖・小麦等</td></tr>
+            <tr><td>混合税</td><td>従価税と従量税を組み合わせ</td><td>一部農産品等</td></tr>
+          </table>
+          <h4>税率の種類（適用優先順位）</h4>
+          <ul>
+            <li><strong>協定税率（WTO税率）</strong>：国定税率より低い場合に優先適用</li>
+            <li><strong>特恵税率</strong>：開発途上国からの輸入に適用（最低税率）</li>
+            <li><strong>暫定税率</strong>：国定税率（基本）を暫定的に修正</li>
+            <li><strong>基本税率</strong>：関税定率法別表に規定された原則的な税率</li>
+          </ul>
+          <h4>課税標準（CIF価格）</h4>
+          <p>輸入貨物の課税標準は原則として<strong>CIF価格</strong>（Cost + Insurance + Freight）です。</p>
+          <p>CIF価格 ＝ 貨物の価格（FOB）＋ 保険料 ＋ 運賃</p>
+          <p>関税額 ＝ CIF価格 × 税率</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">計算問題は必ず出ます！<strong>CIF = FOB + 保険料 + 運賃</strong>を覚えてください。外貨建ての場合は税関公示レートで円換算する点も忘れずに！</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 計算問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 関税の種類を調べる</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-2-5" onclick="markDone('2-5')">✓ 読了にする</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 第3章 -->
+  <div class="learn-chapter">
+    <div class="learn-chapter-header" onclick="toggleChapter('ch3')">
+      <span>第3章 通関業法</span>
+      <span class="learn-ch-num" id="ch3-progress">0/4</span>
+      <span id="ch3-chevron">▼</span>
+    </div>
+    <div class="learn-chapter-body" id="ch3-body">
+
+      <!-- 3-1 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('3-1')">
+          <div class="learn-sec-check" id="check-3-1">○</div>
+          <span>3-1 通関業法の目的</span>
+          <span class="chevron" id="sec-chevron-3-1">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-3-1">
+          <h4>目的（第1条）</h4>
+          <p>通関業法は、通関業を営む者についてその<strong>許可及び監督等に関する制度</strong>を定め、その業務の<strong>適正な運営を確保</strong>することにより、関税法等の適正な執行に資するとともに、<strong>輸出入貿易の公正な発展</strong>に寄与することを目的とする。</p>
+          <h4>通関業とは</h4>
+          <p>他人の依頼を受けて、税関に対して行う輸出入の申告・申請・不服申立て等の業務のことです。<strong>有償・無償を問わず</strong>、他人のために行う申告等の行為が通関業に該当します。</p>
+          <h4>通関業の種類</h4>
+          <ul>
+            <li>輸出申告・輸入申告の代理</li>
+            <li>関税等の過誤納金の還付請求</li>
+            <li>不服申立ての代理</li>
+            <li>その他税関手続き全般の代行</li>
+          </ul>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">目的条文のキーワードは「<strong>許可及び監督</strong>」「<strong>適正な運営の確保</strong>」「<strong>輸出入貿易の公正な発展</strong>」の3つです！そのまま穴埋め問題で出ますよ。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関業法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 法令を参照</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-3-1" onclick="markDone('3-1')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 3-2 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('3-2')">
+          <div class="learn-sec-check" id="check-3-2">○</div>
+          <span>3-2 通関業の許可制度</span>
+          <span class="chevron" id="sec-chevron-3-2">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-3-2">
+          <h4>許可の基本ルール</h4>
+          <ul>
+            <li><strong>許可権者：</strong>税関長</li>
+            <li><strong>許可の単位：</strong>税関官署ごとに許可が必要（原則）</li>
+            <li><strong>許可の有効期限：</strong>なし（ただし定期的な審査あり）</li>
+          </ul>
+          <h4>主な欠格事由（許可を受けられない場合）</h4>
+          <ul>
+            <li>禁錮以上の刑に処せられ2年を経過していない者</li>
+            <li>通関業法・関税法等違反で刑に処せられ2年を経過していない者</li>
+            <li>暴力団員等</li>
+            <li>通関業の許可を取り消されて2年を経過していない者</li>
+            <li>法人でその役員が欠格事由に該当する者</li>
+          </ul>
+          <h4>許可の承継・変更</h4>
+          <p>合併・分割・相続の場合、一定の要件を満たせば許可の承継が認められます。営業区域の拡大には新たな許可申請が必要です。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">許可の「単位」が重要！原則は<strong>税関ごと</strong>に許可を取る必要があります。欠格事由の「2年」という数字は試験頻出です。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 許可制度の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第3条を参照</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-3-2" onclick="markDone('3-2')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 3-3 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('3-3')">
+          <div class="learn-sec-check" id="check-3-3">○</div>
+          <span>3-3 通関士の資格と役割</span>
+          <span class="chevron" id="sec-chevron-3-3">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-3-3">
+          <h4>通関士になるには</h4>
+          <ul>
+            <li>通関士試験に合格する</li>
+            <li>通関業者に雇用される（独立開業はできない）</li>
+            <li>通関業者が税関長に<strong>確認申請</strong>を行う</li>
+            <li>税関長の確認を受けた後、通関士として業務を開始</li>
+          </ul>
+          <h4>通関士の主な役割（第19条：通関士審査）</h4>
+          <p>通関業者が作成した申告書等について、その<strong>内容を審査し、記名</strong>しなければならない。通関士の確認（審査・記名）は輸出入申告の重要なチェック機能です。</p>
+          <h4>通関士設置義務（第13条）</h4>
+          <p>通関業者は<strong>営業所ごとに通関士を置かなければならない</strong>。ただし、当該営業所における通関業務の量が少ない場合等は例外あり。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">通関士の最重要業務は「<strong>審査して記名する</strong>」こと！通関士は従業員資格なので、独立して事務所を開業することはできません。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関士の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 通関士を調べる</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-3-3" onclick="markDone('3-3')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 3-4 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('3-4')">
+          <div class="learn-sec-check" id="check-3-4">○</div>
+          <span>3-4 禁止行為・義務</span>
+          <span class="chevron" id="sec-chevron-3-4">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-3-4">
+          <h4>禁止行為</h4>
+          <table class="learn-table">
+            <tr><th>禁止行為</th><th>内容</th></tr>
+            <tr><td>名義貸しの禁止（第34条）</td><td>自己の名義を他人に使用させて通関業を営ませること</td></tr>
+            <tr><td>不正行為の禁止</td><td>不正の手段により輸出入の許可・承認等を得ること</td></tr>
+            <tr><td>特定荷主との不正な利益供与等の禁止</td><td>特定の荷主に特別の利益を与えること</td></tr>
+          </table>
+          <h4>主な義務</h4>
+          <table class="learn-table">
+            <tr><th>義務</th><th>内容</th></tr>
+            <tr><td>秘密保持義務（第31条）</td><td>業務上知り得た秘密を漏らしてはならない。<strong>退職後も継続</strong></td></tr>
+            <tr><td>料金掲示義務（第28条）</td><td>料金表を営業所に掲示しなければならない</td></tr>
+            <tr><td>帳簿の備え付け（第32条）</td><td>通関業務に関する帳簿を作成・保存しなければならない</td></tr>
+            <tr><td>書類の閲覧（第33条）</td><td>荷主の求めに応じて申告書等を閲覧させる義務</td></tr>
+          </table>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">秘密保持義務は「<strong>退職後も継続する</strong>」点が最頻出ポイント！名義貸し禁止と合わせて必ず覚えましょう。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関業法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第31条を参照</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-3-4" onclick="markDone('3-4')">✓ 読了にする</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 第4章 -->
+  <div class="learn-chapter">
+    <div class="learn-chapter-header" onclick="toggleChapter('ch4')">
+      <span>第4章 外国為替及び外国貿易法（外為法）</span>
+      <span class="learn-ch-num" id="ch4-progress">0/3</span>
+      <span id="ch4-chevron">▼</span>
+    </div>
+    <div class="learn-chapter-body" id="ch4-body">
+
+      <!-- 4-1 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('4-1')">
+          <div class="learn-sec-check" id="check-4-1">○</div>
+          <span>4-1 外為法の目的と体系</span>
+          <span class="chevron" id="sec-chevron-4-1">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-4-1">
+          <h4>目的（第1条）</h4>
+          <p>対外取引の<strong>正常な発展</strong>及び我が国又は<strong>国際社会の平和と安全の維持</strong>を目的とする。</p>
+          <h4>基本原則：原則自由・例外規制</h4>
+          <p>外為法の大原則は「<strong>対外取引は原則として自由</strong>」です。ただし、国際平和・安全保障上の観点から特定の取引・品目については規制（許可制）を設けています。</p>
+          <h4>所管省庁</h4>
+          <table class="learn-table">
+            <tr><th>省庁</th><th>担当分野</th></tr>
+            <tr><td>財務省</td><td>資本取引・外国為替・支払い規制</td></tr>
+            <tr><td>経済産業省</td><td>貨物・技術の輸出入規制（安全保障貿易管理）</td></tr>
+          </table>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">「<strong>原則自由・例外規制</strong>」が外為法の大原則です！この考え方を頭に置いて学習すると、個別の規制の意味が理解しやすくなりますよ。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 法令を参照</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-4-1" onclick="markDone('4-1')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 4-2 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('4-2')">
+          <div class="learn-sec-check" id="check-4-2">○</div>
+          <span>4-2 輸出規制の仕組み</span>
+          <span class="chevron" id="sec-chevron-4-2">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-4-2">
+          <h4>輸出規制の根拠</h4>
+          <ul>
+            <li>外為法第48条 + 輸出貿易管理令</li>
+            <li>許可権者：<strong>経済産業大臣</strong></li>
+            <li>目的：大量破壊兵器・通常兵器等の拡散防止</li>
+          </ul>
+          <h4>規制の流れ</h4>
+          <ul>
+            <li>① 輸出しようとする貨物が規制対象か確認（品目分類）</li>
+            <li>② 規制対象であれば経済産業大臣へ許可申請</li>
+            <li>③ 許可取得後に輸出可能（許可なしでは輸出不可）</li>
+          </ul>
+          <h4>罰則</h4>
+          <p>輸出規制違反は<strong>刑事罰（懲役・罰金）</strong>の対象。法人への両罰規定もあり。近年、違反事例に対する取り締まりが強化されています。</p>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">許可なしで規制品を輸出すると重い罰則があります！輸出前に必ず品目確認→必要なら許可申請の手順を踏みましょう。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 輸出規制を調べる</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-4-2" onclick="markDone('4-2')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 4-3 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('4-3')">
+          <div class="learn-sec-check" id="check-4-3">○</div>
+          <span>4-3 戦略物資・キャッチオール規制</span>
+          <span class="chevron" id="sec-chevron-4-3">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-4-3">
+          <h4>戦略物資とは</h4>
+          <p>軍事転用が可能な機微な貨物・技術のこと。武器、核・生物・化学兵器関連品、ミサイル関連品等が該当します。</p>
+          <h4>規制の2種類</h4>
+          <table class="learn-table">
+            <tr><th>種類</th><th>内容</th></tr>
+            <tr><td><strong>リスト規制</strong></td><td>輸出貿易管理令別表第1に掲載された品目。用途・仕向先に関わらず許可が必要</td></tr>
+            <tr><td><strong>キャッチオール規制</strong>（補完的輸出規制）</td><td>リスト規制対象外の貨物でも、大量破壊兵器等への転用の懸念がある場合に適用</td></tr>
+          </table>
+          <h4>キャッチオール規制のポイント</h4>
+          <ul>
+            <li>リスト規制対象外でも「引っかかる」可能性あり</li>
+            <li><strong>用途確認・需要者確認（EUC：End User Check）</strong>が重要</li>
+            <li>「懸念国」（大量破壊兵器の開発・製造等に関与するおそれのある国）への輸出には特に注意</li>
+            <li>輸出者は需要者から<strong>誓約書（EUC）</strong>を取得することが推奨される</li>
+          </ul>
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">キャッチオール規制は「<strong>リスト外でも引っかかる</strong>」のがポイント！一般の工業製品でも転用の懸念があれば規制対象になります。EUCの取得習慣が大切です。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 キャッチオール規制を調べる</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-4-3" onclick="markDone('4-3')">✓ 読了にする</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 <!-- ===== AI CHAT ===== -->
@@ -1265,11 +1899,76 @@ function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// ===== LEARN TAB =====
+const LEARN_SECTIONS = ['1-1','1-2','1-3','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','4-1','4-2','4-3'];
+const LEARN_CHAPTERS = {
+  ch1: ['1-1','1-2','1-3'],
+  ch2: ['2-1','2-2','2-3','2-4','2-5'],
+  ch3: ['3-1','3-2','3-3','3-4'],
+  ch4: ['4-1','4-2','4-3']
+};
+
+function toggleChapter(id) {
+  const body = document.getElementById(id + '-body');
+  const chevron = document.getElementById(id + '-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.textContent = isOpen ? '▼' : '▲';
+}
+
+function toggleSection(id) {
+  const body = document.getElementById('sec-body-' + id);
+  const chevron = document.getElementById('sec-chevron-' + id);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.textContent = isOpen ? '▼' : '▲';
+}
+
+function markDone(id) {
+  const isDone = localStorage.getItem('learn_done_' + id) === '1';
+  if (isDone) {
+    localStorage.removeItem('learn_done_' + id);
+  } else {
+    localStorage.setItem('learn_done_' + id, '1');
+  }
+  updateLearnProgress();
+}
+
+function updateLearnProgress() {
+  const total = LEARN_SECTIONS.length;
+  let done = 0;
+  LEARN_SECTIONS.forEach(id => {
+    const isDone = localStorage.getItem('learn_done_' + id) === '1';
+    const checkEl = document.getElementById('check-' + id);
+    const btnEl = document.getElementById('done-btn-' + id);
+    if (checkEl) { checkEl.textContent = isDone ? '✓' : '○'; checkEl.classList.toggle('done', isDone); }
+    if (btnEl) { btnEl.textContent = isDone ? '✓ 読了済み' : '✓ 読了にする'; btnEl.classList.toggle('done', isDone); }
+    if (isDone) done++;
+  });
+  const pct = Math.round(done / total * 100);
+  const bar = document.getElementById('learn-progress-bar');
+  const text = document.getElementById('learn-progress-text');
+  if (bar) bar.style.width = pct + '%';
+  if (text) text.textContent = done + ' / ' + total + ' セクション完了';
+  Object.entries(LEARN_CHAPTERS).forEach(([ch, sections]) => {
+    const chDone = sections.filter(id => localStorage.getItem('learn_done_' + id) === '1').length;
+    const el = document.getElementById(ch + '-progress');
+    if (el) el.textContent = chDone + '/' + sections.length;
+  });
+}
+
+function goToTab(name) {
+  const btn = [...document.querySelectorAll('nav.tabs button')]
+    .find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'"));
+  if (btn) btn.click();
+}
+
 // ===== INIT =====
 updateStats();
 loadDaily();
 renderQuiz();
 renderGlossary();
+updateLearnProgress();
 </script>
 </body>
 </html>
