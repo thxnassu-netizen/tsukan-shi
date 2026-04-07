@@ -280,6 +280,29 @@
   .learn-done-btn { margin-top: 10px; width: 100%; }
   .learn-done-btn.done { background: var(--success); }
   .learn-done-btn.done:hover { background: #219a52; }
+  .learn-important {
+    background: #fff8e8; border: 1px solid #f0c040; border-left: 4px solid #e67e22;
+    border-radius: 8px; padding: 12px 14px; margin: 12px 0; font-size: 0.83rem; line-height: 1.75;
+  }
+  .learn-important-title { font-weight: 700; color: #c0392b; font-size: 0.8rem; margin-bottom: 5px; }
+  .learn-example {
+    background: #eaf4fb; border: 1px solid #aed6f1; border-left: 4px solid var(--accent);
+    border-radius: 8px; padding: 12px 14px; margin: 12px 0; font-size: 0.83rem; line-height: 1.75;
+  }
+  .learn-example-title { font-weight: 700; color: var(--accent); font-size: 0.8rem; margin-bottom: 5px; }
+  .learn-flow { display: flex; flex-direction: column; gap: 4px; margin: 8px 0; }
+  .learn-flow-step {
+    display: flex; align-items: flex-start; gap: 8px; font-size: 0.83rem; line-height: 1.65;
+  }
+  .learn-flow-num {
+    background: var(--primary); color: white; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .learn-flow-arrow { text-align: center; color: var(--muted); font-size: 0.8rem; padding-left: 11px; }
+  .priority-list { counter-reset: priority; list-style: none; padding-left: 0; }
+  .priority-list li { counter-increment: priority; display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; font-size: 0.83rem; line-height: 1.65; }
+  .priority-list li::before { content: counter(priority); background: var(--accent); color: white; border-radius: 4px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
 
   /* PNG character states */
   .kanta-img {
@@ -492,18 +515,17 @@
 <!-- ===== LEARN ===== -->
 <div id="tab-learn" class="tab-content">
 
-  <!-- 進捗カード -->
   <div class="card learn-progress-card">
     <h2>📚 学習の進捗</h2>
     <div class="progress-bar-wrap"><div class="progress-bar" id="learn-progress-bar" style="width:0%"></div></div>
-    <div style="font-size:0.8rem;color:var(--muted);margin-top:6px" id="learn-progress-text">0 / 15 セクション完了</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-top:6px" id="learn-progress-text">0 / 21 セクション完了</div>
   </div>
 
-  <!-- 第1章 -->
+  <!-- ====== 第1章 ====== -->
   <div class="learn-chapter">
     <div class="learn-chapter-header" onclick="toggleChapter('ch1')">
       <span>第1章 通関士試験とは</span>
-      <span class="learn-ch-num" id="ch1-progress">0/3</span>
+      <span class="learn-ch-num" id="ch1-progress">0/5</span>
       <span id="ch1-chevron">▼</span>
     </div>
     <div class="learn-chapter-body" id="ch1-body">
@@ -512,23 +534,34 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('1-1')">
           <div class="learn-sec-check" id="check-1-1">○</div>
-          <span>1-1 試験の概要・合格率・難易度</span>
+          <span>1-1 試験の概要・歴史・背景</span>
           <span class="chevron" id="sec-chevron-1-1">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-1-1">
+          <h4>通関士試験の歴史</h4>
+          <p>通関士試験は<strong>1967年（昭和42年）</strong>に制定された通関業法とともに誕生した国家資格です。それ以前は通関業務に資格制度がなく、業務品質のばらつきが問題になっていました。高度経済成長期に輸出入量が急増したことで、専門的な通関業務の担い手を育成する必要が生じ、試験制度が設けられました。</p>
+          <p>その後、WTO加盟（1995年）・EPAの積極的な締結（2000年代以降）により、通関業務はますます複雑化。通関士の重要性はさらに高まっています。</p>
+
           <h4>試験の基本情報</h4>
-          <ul>
-            <li><strong>主催：</strong>財務省（税関）</li>
-            <li><strong>実施時期：</strong>毎年10月（第1日曜日）</li>
-            <li><strong>受験資格：</strong>なし（年齢・学歴・国籍を問わず誰でも受験可）</li>
-            <li><strong>試験形式：</strong>マークシート式（択一・選択）</li>
-            <li><strong>合格率：</strong>約10〜15%（難関国家資格）</li>
-          </ul>
-          <h4>難易度について</h4>
-          <p>合格率が示す通り、通関士試験は難関資格です。しかし出題範囲は法律に限定されており、正しい学習方法で取り組めば必ず合格できます。過去問の繰り返しが最も効果的な学習法です。</p>
+          <table class="learn-table">
+            <tr><th>項目</th><th>内容</th></tr>
+            <tr><td>主催</td><td>財務省（各税関が実施）</td></tr>
+            <tr><td>試験日</td><td>毎年10月 第1日曜日</td></tr>
+            <tr><td>合格発表</td><td>翌年1月頃</td></tr>
+            <tr><td>受験資格</td><td>なし（年齢・学歴・国籍不問）</td></tr>
+            <tr><td>試験形式</td><td>マークシート式（択一・選択）</td></tr>
+            <tr><td>合格率</td><td>近年10〜15%程度（年により変動）</td></tr>
+            <tr><td>受験者数</td><td>約6,000〜8,000人</td></tr>
+          </table>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            合格率は年によって大きく変動します（5%台になる年も）。特定年度の合格率だけで難易度を判断せず、<strong>平均的に10〜15%の難関試験</strong>と認識しておきましょう。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">合格率は低いですが、出題パターンは決まっています。基礎をしっかり固めて過去問を繰り返せば、必ず合格できますよ！</div>
+            <div class="learn-bubble">合格率は低いですが、出題範囲は法律3科目に絞られています。正しい勉強法を続けることで、着実に合格を狙えますよ！</div>
           </div>
           <div class="learn-links">
             <button class="learn-link-btn" onclick="goToTab('quiz')">📝 問題集で練習</button>
@@ -542,22 +575,32 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('1-2')">
           <div class="learn-sec-check" id="check-1-2">○</div>
-          <span>1-2 試験科目と配点</span>
+          <span>1-2 試験科目と配点・出題傾向</span>
           <span class="chevron" id="sec-chevron-1-2">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-1-2">
-          <h4>3科目構成</h4>
+          <h4>3科目の詳細</h4>
           <table class="learn-table">
-            <tr><th>科目</th><th>問題数</th><th>合格基準</th></tr>
-            <tr><td>①通関業法</td><td>択一30問＋選択10問</td><td>概ね60%以上</td></tr>
-            <tr><td>②関税法等</td><td>択一60問＋選択10問</td><td>概ね60%以上</td></tr>
-            <tr><td>③通関書類の作成</td><td>選択20問＋計算</td><td>概ね60%以上</td></tr>
+            <tr><th>科目</th><th>出題形式・問題数</th><th>満点</th><th>合格基準の目安</th></tr>
+            <tr><td>①通関業法</td><td>択一式30問＋選択式10問</td><td>100点</td><td>60点以上</td></tr>
+            <tr><td>②関税法等</td><td>択一式60問＋選択式10問＋計算</td><td>150点</td><td>90点以上</td></tr>
+            <tr><td>③通関書類の作成</td><td>選択式20問＋計算問題</td><td>100点</td><td>60点以上</td></tr>
           </table>
-          <h4>足切り制度（重要！）</h4>
-          <p>通関士試験は<strong>全科目で合格基準を満たす必要</strong>があります。1科目でも基準点を下回ると、他の科目が満点でも不合格となります。苦手科目を作らないことが合格の鍵です。</p>
+          <p>※合格基準点は年度により変動します。財務大臣が各年度に決定します。</p>
+
+          <h4>各科目の出題傾向</h4>
+          <p><strong>①通関業法：</strong>条文の穴埋め・正誤判断が中心。同じ条文から繰り返し出題されるため、条文の読み込みが効果的です。許可制度・通関士の義務・禁止行為が頻出テーマ。</p>
+          <p><strong>②関税法等：</strong>関税法・関税定率法・関税暫定措置法を横断した出題。保税制度・輸出入手続き・税率適用・計算問題が頻出。計算問題では課税価格の算出が必ず出ます。</p>
+          <p><strong>③通関書類の作成：</strong>実務的な出題が多い。品目番号（HSコード）の判断・申告書の記載方法・課税価格の計算が中心。</p>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 足切り制度</div>
+            通関士試験は<strong>全科目で合格基準点を超える必要があります</strong>。1科目でも基準点を下回ると、他科目が満点でも不合格です。苦手科目を作らないことが合格の絶対条件です。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble"><strong>足切りに注意！</strong>一科目でも基準点を下回ると不合格です。関税法等は問題数が多いので、特にしっかり時間をかけて学習しましょう。</div>
+            <div class="learn-bubble">関税法等は問題数が最も多く配点も高い。この科目を制する者が試験を制すると言っても過言ではありません！</div>
           </div>
           <div class="learn-links">
             <button class="learn-link-btn" onclick="goToTab('quiz')">📝 問題集で練習</button>
@@ -570,46 +613,150 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('1-3')">
           <div class="learn-sec-check" id="check-1-3">○</div>
-          <span>1-3 勉強の進め方</span>
+          <span>1-3 科目別対策</span>
           <span class="chevron" id="sec-chevron-1-3">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-1-3">
-          <h4>推奨学習ステップ</h4>
+          <h4>通関業法の対策</h4>
           <ul>
-            <li><strong>STEP 1 通関業法</strong>（比較的コンパクト・全体像を掴む）</li>
-            <li><strong>STEP 2 関税法</strong>（最重要・分量が多いため十分な時間を）</li>
-            <li><strong>STEP 3 外為法</strong>（概要把握が中心・比較的短期間でOK）</li>
-            <li><strong>STEP 4 過去問演習</strong>（直近5年分以上を繰り返す）</li>
+            <li><strong>条文を声に出して読む：</strong>第1条（目的）・第3条（許可）・第13条（通関士設置）・第19条（審査）・第31条（秘密保持）は完全暗記</li>
+            <li><strong>穴埋め問題への対応：</strong>「許可及び<u>　　</u>」「<u>　　</u>の公正な発展」のような空欄を埋められるよう条文の語順まで覚える</li>
+            <li><strong>数字の暗記：</strong>「2年」「3年」「5年」などの期間・罰則の数字は表にまとめて整理</li>
+            <li><strong>過去問を5年分：</strong>同じ条文から繰り返し出題されるパターンを把握する</li>
           </ul>
-          <h4>学習時間の目安</h4>
-          <p>合格に必要な学習時間は<strong>500〜800時間</strong>が目安です。1日2時間であれば約1年間の学習が必要です。毎日継続することが最も重要です。</p>
-          <h4>効果的な学習法</h4>
+
+          <h4>関税法等の対策</h4>
           <ul>
-            <li>テキストで基礎を理解してから過去問に取り組む</li>
-            <li>間違えた問題は必ず条文に戻って確認する</li>
-            <li>重要な数字（期限・割合等）は表にまとめて暗記</li>
-            <li>通関計算は毎日練習して計算力を維持</li>
+            <li><strong>定義の完全理解：</strong>「輸入」「外国貨物」「内国貨物」「保税地域」など基本用語から始める</li>
+            <li><strong>手続きの流れを図で覚える：</strong>輸入・輸出それぞれの手続きの順番を体系的に整理</li>
+            <li><strong>保税地域5種類の比較表を作る：</strong>名称・管理者・蔵置期間・できること を一覧化</li>
+            <li><strong>計算問題は毎日：</strong>CIF価格計算・税率適用・為替換算を実際に手を動かして練習</li>
+            <li><strong>税率の優先順位を暗記：</strong>EPA＞特恵＞協定＞暫定＞基本 の順番は必須</li>
           </ul>
+
+          <h4>通関書類の作成の対策</h4>
+          <ul>
+            <li><strong>HSコードの考え方を理解する：</strong>暗記より「分類の考え方・ルール」の理解が先決</li>
+            <li><strong>輸出入申告書の様式に慣れる：</strong>過去問の書類作成問題を実際に解いてみる</li>
+            <li><strong>課税価格計算の完全マスター：</strong>加算・控除の要素を整理して確実に計算できるよう練習</li>
+          </ul>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            計算問題は「必ず出る」と思って準備しましょう。計算の手順を体で覚えるまで繰り返すことが合格への近道です。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">この学習タブで基礎知識を固めてから、問題集タブで実践練習するのが最も効率的です！わからないことはAI質問タブで聞いてください！</div>
+            <div class="learn-bubble">通関業法は「条文暗記」、関税法は「体系的理解＋計算」、書類作成は「実践練習」と、科目によってアプローチが違います！それぞれ戦略を変えましょう。</div>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-1-3" onclick="markDone('1-3')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 1-4 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('1-4')">
+          <div class="learn-sec-check" id="check-1-4">○</div>
+          <span>1-4 合格までの勉強時間の目安</span>
+          <span class="chevron" id="sec-chevron-1-4">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-1-4">
+          <h4>バックグラウンド別の学習時間目安</h4>
+          <table class="learn-table">
+            <tr><th>バックグラウンド</th><th>目安学習時間</th></tr>
+            <tr><td>完全初学者（法律知識なし）</td><td>700〜1,000時間</td></tr>
+            <tr><td>貿易実務経験者</td><td>400〜600時間</td></tr>
+            <tr><td>通関業務経験者</td><td>200〜400時間</td></tr>
+            <tr><td>法律系資格保有者</td><td>400〜700時間</td></tr>
+          </table>
+
+          <h4>1日の勉強時間別スケジュール</h4>
+          <table class="learn-table">
+            <tr><th>1日の学習時間</th><th>合格までの目安期間</th></tr>
+            <tr><td>1時間</td><td>約1.5〜2.5年</td></tr>
+            <tr><td>2時間</td><td>約1〜1.5年</td></tr>
+            <tr><td>3時間</td><td>約8〜12ヶ月</td></tr>
+            <tr><td>5時間以上</td><td>約5〜8ヶ月</td></tr>
+          </table>
+
+          <h4>月別の学習配分例（10月試験・1月スタートの場合）</h4>
+          <ul>
+            <li><strong>1〜2月：</strong>通関業法を完成させる</li>
+            <li><strong>3〜6月：</strong>関税法の基礎〜応用を習得</li>
+            <li><strong>7〜8月：</strong>外為法＋通関書類の作成</li>
+            <li><strong>9〜10月：</strong>全科目の過去問演習・弱点補強</li>
+          </ul>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            <strong>毎日継続することが最重要</strong>です。週末だけ5時間勉強するより、毎日1時間勉強する方が記憶の定着は圧倒的に良くなります。通勤電車・昼休みなどのスキマ時間を活用しましょう。
+          </div>
+
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">「合格できるかな…」と不安になるのは当然です。でも毎日少しずつ続けた人が必ず合格しています。まずは今日から始めましょう！</div>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-1-4" onclick="markDone('1-4')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 1-5 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('1-5')">
+          <div class="learn-sec-check" id="check-1-5">○</div>
+          <span>1-5 おすすめの勉強順序</span>
+          <span class="chevron" id="sec-chevron-1-5">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-1-5">
+          <h4>推奨学習順序</h4>
+          <div class="learn-flow">
+            <div class="learn-flow-step"><div class="learn-flow-num">1</div><div><strong>通関業法</strong>（1〜2ヶ月）：範囲が最も狭く、法律の考え方に慣れる入門として最適。条文を読む習慣をつける。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">2</div><div><strong>関税法（基礎）</strong>（1〜2ヶ月）：定義・輸出入手続きの流れ・保税制度の基本を習得。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">3</div><div><strong>関税法（計算・応用）</strong>（2〜3ヶ月）：課税価格計算・税率適用・具体的な手続きの詳細を学ぶ。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">4</div><div><strong>外為法</strong>（1ヶ月）：概要と輸出規制の基本フローを理解。関税法の後なら比較的スムーズに習得できる。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">5</div><div><strong>通関書類の作成</strong>（1〜2ヶ月）：実務的な申告書作成・HSコード・計算の総合練習。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">6</div><div><strong>過去問演習（試験前3〜4ヶ月）</strong>：直近5年分を繰り返す。間違えた問題は必ず条文に戻る。</div></div>
+          </div>
+
+          <h4>なぜこの順序が効果的か</h4>
+          <ul>
+            <li>通関業法から始めることで「許可・申告・審査」という通関の基本概念が身につく</li>
+            <li>関税法は最重要科目なので十分な時間を確保する</li>
+            <li>外為法は関税法と関連する部分があるため、関税法後に学ぶと理解が深まる</li>
+            <li>書類作成は全科目の知識を使う総仕上げとして最後に位置づける</li>
+          </ul>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            計算問題は<strong>早い段階から毎日少しずつ</strong>練習すること。試験直前に詰め込もうとしても間に合いません。計算は筋トレと同じで、継続が実力をつけます。
+          </div>
+
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">この学習タブで基礎を固めたら、問題集タブで実践練習！わからないことは遠慮なくAI質問タブで聞いてくださいね。</div>
           </div>
           <div class="learn-links">
             <button class="learn-link-btn" onclick="goToTab('quiz')">📝 問題集で練習</button>
             <button class="learn-link-btn" onclick="goToTab('ai')">🤖 関太先生に質問</button>
           </div>
-          <button class="btn btn-primary learn-done-btn" id="done-btn-1-3" onclick="markDone('1-3')">✓ 読了にする</button>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-1-5" onclick="markDone('1-5')">✓ 読了にする</button>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- 第2章 -->
+  <!-- ====== 第2章 ====== -->
   <div class="learn-chapter">
     <div class="learn-chapter-header" onclick="toggleChapter('ch2')">
-      <span>第2章 関税法の基礎</span>
-      <span class="learn-ch-num" id="ch2-progress">0/5</span>
+      <span>第2章 関税法</span>
+      <span class="learn-ch-num" id="ch2-progress">0/7</span>
       <span id="ch2-chevron">▼</span>
     </div>
     <div class="learn-chapter-body" id="ch2-body">
@@ -618,33 +765,47 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('2-1')">
           <div class="learn-sec-check" id="check-2-1">○</div>
-          <span>2-1 関税法の目的と体系</span>
+          <span>2-1 関税法の目的と体系（条文引用）</span>
           <span class="chevron" id="sec-chevron-2-1">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-2-1">
-          <h4>目的（第1条）</h4>
-          <p>関税法は、<strong>関税の確定・納付・徴収及び還付</strong>並びに<strong>貨物の輸出及び輸入についての税関手続の適正な処理</strong>を図るために必要な事項を定める法律です。</p>
-          <h4>関税法の位置づけ</h4>
+          <h4>第1条（目的）— 条文全文</h4>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 条文（関税法第1条）</div>
+            「この法律は、<strong>関税の確定、納付、徴収及び還付</strong>並びに<strong>貨物の輸出及び輸入についての税関手続の適正な処理</strong>を図るため必要な事項を定めるものとする。」
+          </div>
+
+          <h4>キーワードの意味</h4>
+          <table class="learn-table">
+            <tr><th>用語</th><th>意味</th></tr>
+            <tr><td>確定</td><td>関税額を決定すること（申告納税方式・賦課課税方式）</td></tr>
+            <tr><td>納付</td><td>納税義務者が関税を支払うこと</td></tr>
+            <tr><td>徴収</td><td>税関が強制的に関税を取り立てること</td></tr>
+            <tr><td>還付</td><td>過誤納関税・不足納付後に戻ってくる金額の返還</td></tr>
+          </table>
+
+          <h4>関税法の体系（主な章構成）</h4>
           <ul>
-            <li>輸出入を規律する基本法（通関手続きの根拠法）</li>
-            <li>適用対象：税関を通過するすべての貨物</li>
-            <li>関連法：通関業法・外為法・関税定率法等と連携</li>
+            <li><strong>第1章 総則</strong>：目的・定義・税関長の権限</li>
+            <li><strong>第2章 関税の確定と徴収</strong>：申告納税・賦課課税・担保・延滞税</li>
+            <li><strong>第3章 保税地域</strong>：指定保税地域・保税蔵置場・保税工場・保税展示場・総合保税地域</li>
+            <li><strong>第4章 運送</strong>：保税運送・難破貨物</li>
+            <li><strong>第5章 通関</strong>：輸出入申告・検査・許可・不服申立て</li>
+            <li><strong>第6章 罰則</strong>：関税法違反に対する刑事罰・行政罰</li>
           </ul>
-          <h4>関税法の主な構成</h4>
-          <ul>
-            <li>総則（用語の定義・税関の権限等）</li>
-            <li>関税の確定・徴収（課税要件・申告・納付）</li>
-            <li>輸出入手続（申告・検査・許可）</li>
-            <li>保税制度（保税地域・保税運送）</li>
-            <li>罰則</li>
-          </ul>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 頻出条文</div>
+            第1条の穴埋め問題は毎年のように出題されます。「確定・納付・<u>　　</u>及び還付」「税関手続の<u>　　</u>な処理」のような空欄に正確に答えられるよう、<strong>条文を一字一句覚えること</strong>。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">関税法第1条の目的条文はそのまま試験に出ます！「確定・納付・徴収・還付」と「輸出入の税関手続の適正な処理」の2つのキーワードを覚えましょう。</div>
+            <div class="learn-bubble">「確定→納付→徴収→還付」という4つの語の順番も重要！穴埋め問題では順番も問われます。声に出して繰り返し読んで覚えましょう。</div>
           </div>
           <div class="learn-links">
             <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 法令を参照</button>
-            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 用語集を見る</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 関税法の問題</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-2-1" onclick="markDone('2-1')">✓ 読了にする</button>
         </div>
@@ -654,29 +815,49 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('2-2')">
           <div class="learn-sec-check" id="check-2-2">○</div>
-          <span>2-2 輸入・輸出の定義</span>
+          <span>2-2 輸入・輸出の定義（詳細）</span>
           <span class="chevron" id="sec-chevron-2-2">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-2-2">
           <h4>輸入の定義（第2条第1項第1号）</h4>
-          <p>外国から本邦に到着した<strong>外国貨物</strong>（外国の船舶により公海で採捕された水産物を含む）を<strong>本邦に引き取ること</strong>をいう。</p>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 条文</div>
+            「外国から本邦に到着した<strong>外国貨物</strong>（外国の船舶により公海で採捕された水産物を含む）を<strong>本邦に引き取ること</strong>をいう。」
+          </div>
           <h4>輸出の定義（第2条第1項第2号）</h4>
-          <p><strong>内国貨物</strong>を<strong>外国に向けて送り出すこと</strong>をいう。</p>
-          <h4>外国貨物・内国貨物とは</h4>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 条文</div>
+            「<strong>内国貨物</strong>を<strong>外国に向けて送り出すこと</strong>をいう。」
+          </div>
+
+          <h4>外国貨物・内国貨物の定義（第2条第1項第3号・第4号）</h4>
           <table class="learn-table">
-            <tr><th>種別</th><th>定義</th></tr>
-            <tr><td>外国貨物</td><td>①輸出許可を受けた貨物、②外国から到着した貨物で輸入許可前のもの</td></tr>
-            <tr><td>内国貨物</td><td>本邦にある貨物で外国貨物でないもの（輸入許可済みのものを含む）</td></tr>
+            <tr><th>種別</th><th>定義</th><th>具体例</th></tr>
+            <tr><td><strong>外国貨物</strong></td><td>①輸出の許可を受けた貨物<br>②外国から到着し、輸入許可前の貨物</td><td>輸出許可後・保税地域内の輸入待ち貨物</td></tr>
+            <tr><td><strong>内国貨物</strong></td><td>本邦にある貨物で外国貨物でないもの（輸入許可を受けたものを含む）</td><td>日本で製造された製品・輸入許可済み貨物</td></tr>
           </table>
-          <h4>輸入許可のタイミングが重要</h4>
-          <p>外国から到着した貨物は「<strong>輸入許可が下りるまで</strong>は外国貨物」です。輸入許可後に初めて内国貨物となり、自由に国内流通できます。</p>
+
+          <h4>「公海で採捕された水産物」が輸入に含まれる理由</h4>
+          <p>日本の漁船が公海で漁をして日本の港に持ち帰った水産物は「外国から到着した」とはいえません。しかし外国貨物に準じた扱いとするため、条文に明示的に規定されています。</p>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例：スーツ輸入の流れ</div>
+            中国工場で製造したスーツを日本に輸入する場合：<br>
+            ①中国で製造（外国貨物）→②上海港から出荷→③横浜港に到着（<strong>この時点も外国貨物</strong>）→④保税蔵置場に搬入→⑤輸入申告→⑥審査・検査→⑦関税納付→⑧<strong>輸入許可（ここで内国貨物に変わる）</strong>→⑨引取り・国内販売
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            外国から来た貨物は「<strong>輸入許可が下りるまで外国貨物のまま</strong>」です。輸入許可後に初めて内国貨物となります。この区別が保税制度・関税計算の基礎になります。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">「外国貨物」と「内国貨物」の区別は頻出問題！<strong>輸入許可のタイミング</strong>が境界線です。輸入許可前は外国貨物、許可後は内国貨物になります。</div>
+            <div class="learn-bubble">「輸入許可 = 内国貨物になる瞬間」を覚えましょう。保税地域に入っている間はまだ外国貨物！許可が下りるまで関税は課されませんが、輸出・国内販売もできません。</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 関税法の問題を解く</button>
             <button class="learn-link-btn" onclick="goToTab('glossary')">📖 用語集で確認</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 定義の問題を解く</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-2-2" onclick="markDone('2-2')">✓ 読了にする</button>
         </div>
@@ -686,35 +867,61 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('2-3')">
           <div class="learn-sec-check" id="check-2-3">○</div>
-          <span>2-3 税関手続きの流れ</span>
+          <span>2-3 輸入申告の具体的な手順</span>
           <span class="chevron" id="sec-chevron-2-3">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-2-3">
-          <h4>輸入手続きの流れ</h4>
-          <ul>
-            <li>① <strong>入港</strong>：外国から船舶・航空機が到着</li>
-            <li>② <strong>搬入・蔵置</strong>：保税地域へ搬入（関税未納のまま保管）</li>
-            <li>③ <strong>輸入申告</strong>：税関長に申告書を提出</li>
-            <li>④ <strong>審査・検査</strong>：税関による書類審査・貨物検査</li>
-            <li>⑤ <strong>関税等の納付</strong>：関税・消費税等を納付</li>
-            <li>⑥ <strong>輸入許可</strong>：税関長による許可（ここで内国貨物になる）</li>
-            <li>⑦ <strong>引取り</strong>：保税地域から貨物を引き取る</li>
-          </ul>
+          <h4>輸入に必要な書類</h4>
+          <table class="learn-table">
+            <tr><th>書類名</th><th>内容・用途</th></tr>
+            <tr><td>輸入申告書</td><td>NACCSで電子申告。品名・数量・価格・税番等を記載</td></tr>
+            <tr><td>インボイス（商業送り状）</td><td>売主が発行する売買の証明書。価格・数量・品名が記載</td></tr>
+            <tr><td>パッキングリスト</td><td>梱包明細書。個数・重量・容積等を記載</td></tr>
+            <tr><td>船荷証券（B/L）/ 航空貨物運送状（AWB）</td><td>貨物の権利証書。引取りに必要</td></tr>
+            <tr><td>保険証券・運賃明細書</td><td>課税価格（CIF価格）の計算に使用</td></tr>
+            <tr><td>原産地証明書</td><td>特恵関税・EPA税率適用時に必要</td></tr>
+            <tr><td>各種検査証明書</td><td>食品・動植物・医薬品等の場合に必要</td></tr>
+          </table>
+
+          <h4>輸入手続きの流れ（NACCS利用）</h4>
+          <div class="learn-flow">
+            <div class="learn-flow-step"><div class="learn-flow-num">1</div><div><strong>入港・搬入届出</strong>：船舶・航空機が入港。貨物を保税地域へ搬入し搬入届出。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">2</div><div><strong>輸入申告（NACCS入力）</strong>：通関業者がNACCSに申告データを入力送信。申告番号が付番される。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">3</div><div><strong>審査</strong>：税関担当官が申告内容・添付書類を審査。疑義があれば照会。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">4</div><div><strong>検査（必要な場合）</strong>：税関が現物検査を実施。すべての貨物が検査されるわけではない。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">5</div><div><strong>関税等の納付</strong>：関税・消費税・その他税金を納付（または担保提供）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">6</div><div><strong>輸入許可</strong>：税関長が輸入許可証を発行。この瞬間に内国貨物となる。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">7</div><div><strong>引取り</strong>：保税地域から貨物を引き取る。国内流通が可能になる。</div></div>
+          </div>
+
           <h4>輸出手続きの流れ</h4>
-          <ul>
-            <li>① <strong>輸出申告</strong>：税関長に申告書を提出（積み込み前）</li>
-            <li>② <strong>審査・検査</strong>：税関による確認</li>
-            <li>③ <strong>輸出許可</strong>：税関長による許可（ここで外国貨物になる）</li>
-            <li>④ <strong>積込み・出港</strong>：本船・航空機に積み込んで出港</li>
-          </ul>
-          <h4>輸入許可前引取り（BP：Before Permit）</h4>
-          <p>担保を提供することで、輸入許可前でも貨物を引き取ることができる特例制度（第73条）。輸入許可前でも引き取りが可能ですが、関税の支払い義務は残ります。</p>
+          <div class="learn-flow">
+            <div class="learn-flow-step"><div class="learn-flow-num">1</div><div><strong>輸出申告</strong>：貨物を積み込む前に税関へ申告（NACCSで電子申告）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">2</div><div><strong>審査・検査</strong>：税関による審査（必要な場合は検査）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">3</div><div><strong>輸出許可</strong>：許可の時点で内国貨物→外国貨物に変わる。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">4</div><div><strong>積込み・出港</strong>：許可後に本船・航空機へ積み込んで出港。</div></div>
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 輸入許可前引取り（BP制度）</div>
+            第73条に規定される特例制度。<strong>担保を提供すれば、輸入許可が下りる前でも貨物を引き取れる</strong>。輸入許可が下りてからでは間に合わない場合（急ぐ場合）に使用。ただし関税の支払い義務は残る。試験では「担保を提供する」点が必ず問われます。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">輸入は「申告→許可→引取り」の順番！輸入許可が出て初めて内国貨物になります。BPは担保が必要な特例です。試験では順番を問う問題が多いですよ。</div>
+            <div class="learn-bubble">輸入は「申告→審査→検査→納付→許可→引取り」の順番！「許可の前に引取り」は原則違反ですが、BP（担保提供）なら例外的に可能です。</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 関税法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 手続きの問題を解く</button>
             <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第67条を参照</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-2-3" onclick="markDone('2-3')">✓ 読了にする</button>
@@ -725,29 +932,90 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('2-4')">
           <div class="learn-sec-check" id="check-2-4">○</div>
-          <span>2-4 保税制度</span>
+          <span>2-4 保税地域5種類の詳細</span>
           <span class="chevron" id="sec-chevron-2-4">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-2-4">
           <h4>保税制度とは</h4>
-          <p>外国貨物を<strong>関税を課さずに（未納のまま）</strong>蔵置・加工・展示等できる制度。輸入許可前の外国貨物を一時的に管理するための仕組みです。</p>
-          <h4>保税地域の5種類</h4>
+          <p>外国貨物を<strong>関税を課さずに（未納のまま）</strong>蔵置・加工・展示できる制度。輸入許可前の外国貨物を一時的に管理する仕組みです。保税地域で保管されている間は、関税が課されない代わりに、自由な国内流通もできません。</p>
+
+          <h4>① 指定保税地域（第29〜34条）</h4>
+          <ul>
+            <li><strong>設置者：</strong>国・地方公共団体・港湾管理者等</li>
+            <li><strong>蔵置期間：</strong>1ヶ月以内（延長不可）</li>
+            <li><strong>できること：</strong>蔵置・仕分け・見本の展示（加工不可）</li>
+            <li><strong>特徴：</strong>港湾・空港のターミナル内に設置。民間は使えない</li>
+          </ul>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例</div>
+            横浜港の上屋（シェッド）、成田空港の航空貨物ターミナル内の保税エリア
+          </div>
+
+          <h4>② 保税蔵置場（第42〜54条）</h4>
+          <ul>
+            <li><strong>設置者：</strong>民間事業者（税関長の許可が必要）</li>
+            <li><strong>蔵置期間：</strong>原則2年（延長申請可能）</li>
+            <li><strong>できること：</strong>蔵置・整理・改装・仕分け・見本の展示（加工は不可）</li>
+            <li><strong>特徴：</strong>最も一般的な保税地域。輸出入ともに利用可能</li>
+          </ul>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例</div>
+            三菱倉庫・住友倉庫などが運営する保税倉庫、通関業者が併設する保税蔵置場
+          </div>
+
+          <h4>③ 保税工場（第56〜62条）</h4>
+          <ul>
+            <li><strong>設置者：</strong>民間事業者（税関長の許可が必要）</li>
+            <li><strong>蔵置期間：</strong>許可期間内（通常2年、更新可）</li>
+            <li><strong>できること：</strong>蔵置に加え、<strong>外国貨物の加工・製造・改装が可能</strong></li>
+            <li><strong>特徴：</strong>輸入部品を使って製品を製造し輸出する場合、関税を払わずに加工できる</li>
+          </ul>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例</div>
+            外国から部品を輸入して日本で組み立て、完成品を輸出するメーカーの工場。加工後に輸出すれば関税ゼロ。輸入（国内消費）する場合は完成品として課税。
+          </div>
+
+          <h4>④ 保税展示場（第62条の2〜7）</h4>
+          <ul>
+            <li><strong>設置者：</strong>博覧会・見本市等の主催者（税関長の許可）</li>
+            <li><strong>蔵置期間：</strong>展示会の開催期間（短期）</li>
+            <li><strong>できること：</strong>外国貨物の展示・使用</li>
+            <li><strong>特徴：</strong>展示後に輸出（返送）すれば関税なし。輸入する場合は課税</li>
+          </ul>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例</div>
+            東京モーターショーでの外国車の展示、国際見本市での外国製品のデモンストレーション
+          </div>
+
+          <h4>⑤ 総合保税地域（第62条の8〜15）</h4>
+          <ul>
+            <li><strong>設置者：</strong>民間事業者（<strong>財務大臣</strong>の許可が必要）</li>
+            <li><strong>蔵置期間：</strong>許可期間内</li>
+            <li><strong>できること：</strong>①〜④の機能を総合的に持つ大規模施設</li>
+            <li><strong>特徴：</strong>国際的な物流拠点。設置許可権者が「税関長」ではなく「財務大臣」である点が重要</li>
+          </ul>
+
+          <h4>5種類の比較まとめ</h4>
           <table class="learn-table">
-            <tr><th>種類</th><th>特徴</th><th>蔵置期間</th></tr>
-            <tr><td>①指定保税地域</td><td>国・地方公共団体等が管理。港湾・空港内に設置</td><td>1ヶ月以内</td></tr>
-            <tr><td>②保税蔵置場</td><td>民間事業者が許可を受けて設置。最も一般的</td><td>2年以内</td></tr>
-            <tr><td>③保税工場</td><td>外国貨物の加工・製造・改装等が可能</td><td>許可期間内</td></tr>
-            <tr><td>④保税展示場</td><td>博覧会・見本市等での展示が可能</td><td>許可期間内</td></tr>
-            <tr><td>⑤総合保税地域</td><td>上記①〜④の機能を総合的に持つ大規模地域</td><td>許可期間内</td></tr>
+            <tr><th>種類</th><th>管理者</th><th>許可権者</th><th>蔵置期間</th><th>加工</th></tr>
+            <tr><td>指定保税地域</td><td>国・公共</td><td>税関長（指定）</td><td>1ヶ月</td><td>不可</td></tr>
+            <tr><td>保税蔵置場</td><td>民間</td><td>税関長</td><td>2年</td><td>不可</td></tr>
+            <tr><td>保税工場</td><td>民間</td><td>税関長</td><td>許可期間</td><td>可</td></tr>
+            <tr><td>保税展示場</td><td>主催者</td><td>税関長</td><td>開催期間</td><td>不可</td></tr>
+            <tr><td>総合保税地域</td><td>民間</td><td><strong>財務大臣</strong></td><td>許可期間</td><td>可</td></tr>
           </table>
-          <h4>保税運送</h4>
-          <p>外国貨物を保税地域間で運送すること。税関長の承認が必要。運送中も外国貨物のまま（関税は課されない）。</p>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 頻出の比較ポイント</div>
+            ①指定保税地域は「1ヶ月」、②保税蔵置場は「2年」の蔵置期間が頻出。⑤総合保税地域は許可権者が「<strong>財務大臣</strong>」（他は税関長）である点が最頻出の違いです。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">5種類の保税地域の特徴と蔵置期間の違いは試験頻出！語呂合わせ「<strong>指定・蔵置・工場・展示・総合</strong>」で順番を覚えましょう。指定は1ヶ月、蔵置場は2年がポイントです。</div>
+            <div class="learn-bubble">「指定は国が管理で1ヶ月」「蔵置場は民間で2年」「工場は加工できる」「展示場は展示できる」「総合は財務大臣」この5つのキーワードで覚えましょう！</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 保税制度の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 保税制度の問題</button>
             <button class="learn-link-btn" onclick="goToTab('glossary')">📖 保税地域を調べる</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-2-4" onclick="markDone('2-4')">✓ 読了にする</button>
@@ -758,48 +1026,197 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('2-5')">
           <div class="learn-sec-check" id="check-2-5">○</div>
-          <span>2-5 関税の種類と計算方法</span>
+          <span>2-5 関税の種類と計算方法（具体例付き）</span>
           <span class="chevron" id="sec-chevron-2-5">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-2-5">
           <h4>課税方式の種類</h4>
           <table class="learn-table">
-            <tr><th>方式</th><th>計算方法</th><th>例</th></tr>
-            <tr><td>従価税</td><td>課税価格（CIF）× 税率</td><td>衣類・電子機器等</td></tr>
-            <tr><td>従量税</td><td>数量（重量・個数等）× 単位税額</td><td>砂糖・小麦等</td></tr>
-            <tr><td>混合税</td><td>従価税と従量税を組み合わせ</td><td>一部農産品等</td></tr>
+            <tr><th>方式</th><th>計算式</th><th>主な適用品目</th></tr>
+            <tr><td>従価税（最も一般的）</td><td>課税価格（CIF）× 税率</td><td>衣類・電子機器・自動車等</td></tr>
+            <tr><td>従量税</td><td>数量（重量・個数等）× 単位税額</td><td>小麦・砂糖・たばこ等</td></tr>
+            <tr><td>混合税</td><td>従価税額と従量税額を組み合わせ（高い方・低い方等）</td><td>一部農産品</td></tr>
+            <tr><td>選択税</td><td>従価税と従量税を比較して低い方を適用</td><td>特定の農産品</td></tr>
           </table>
-          <h4>税率の種類（適用優先順位）</h4>
-          <ul>
-            <li><strong>協定税率（WTO税率）</strong>：国定税率より低い場合に優先適用</li>
-            <li><strong>特恵税率</strong>：開発途上国からの輸入に適用（最低税率）</li>
-            <li><strong>暫定税率</strong>：国定税率（基本）を暫定的に修正</li>
-            <li><strong>基本税率</strong>：関税定率法別表に規定された原則的な税率</li>
-          </ul>
-          <h4>課税標準（CIF価格）</h4>
-          <p>輸入貨物の課税標準は原則として<strong>CIF価格</strong>（Cost + Insurance + Freight）です。</p>
-          <p>CIF価格 ＝ 貨物の価格（FOB）＋ 保険料 ＋ 運賃</p>
-          <p>関税額 ＝ CIF価格 × 税率</p>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 計算例①：従価税</div>
+            CIF価格 1,000,000円、関税率 5%の場合<br>
+            関税額 = 1,000,000円 × 5% = <strong>50,000円</strong>
+          </div>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 計算例②：従量税</div>
+            小麦 200kg、単位税額 1kgあたり 55円の場合<br>
+            関税額 = 200kg × 55円/kg = <strong>11,000円</strong>
+          </div>
+
+          <h4>税率の種類と優先順位（重要！）</h4>
+          <ol class="priority-list">
+            <li><strong>経済連携協定（EPA）税率</strong>：日本がEPAを締結した国からの輸入に適用。原産地証明書が必要。最優先。</li>
+            <li><strong>特恵税率</strong>：開発途上国からの輸入に適用。特恵受益国であることの証明が必要。</li>
+            <li><strong>協定税率（WTO税率）</strong>：WTO/GATT加盟国からの輸入。国定税率より低い場合に適用。</li>
+            <li><strong>暫定税率</strong>：関税暫定措置法に規定。基本税率を暫定的に修正した税率。</li>
+            <li><strong>基本税率</strong>：関税定率法別表に規定された原則的な税率。最後の拠り所。</li>
+          </ol>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例：税率の選択</div>
+            ある品目の税率が以下の場合、どの税率を適用するか？<br>
+            EPA税率：3% ／ 特恵税率：5% ／ 協定税率：8% ／ 暫定税率：6% ／ 基本税率：10%<br>
+            → <strong>EPA税率3%を適用</strong>（EPA締結国から原産地証明書を添付して輸入する場合）
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ EPA税率の落とし穴</div>
+            EPA税率は最も有利ですが、<strong>原産地証明書（特定原産地証明書）の添付を忘れると適用できません</strong>。試験でも「原産地証明書がない場合に適用できる最も低い税率は？」という形で出題されます。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">計算問題は必ず出ます！<strong>CIF = FOB + 保険料 + 運賃</strong>を覚えてください。外貨建ての場合は税関公示レートで円換算する点も忘れずに！</div>
+            <div class="learn-bubble">税率の優先順位「EPA→特恵→協定→暫定→基本」は絶対暗記！数字の大小ではなく「優先順位の高い方を適用する」という考え方がポイントです。</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 計算問題を解く</button>
-            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 関税の種類を調べる</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 関税計算の問題</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 従価税・従量税</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-2-5" onclick="markDone('2-5')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 2-6 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('2-6')">
+          <div class="learn-sec-check" id="check-2-6">○</div>
+          <span>2-6 課税価格の算出方法（例題付き）</span>
+          <span class="chevron" id="sec-chevron-2-6">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-2-6">
+          <h4>課税価格の原則（関税定率法第4条）</h4>
+          <p>輸入貨物の課税価格は原則として<strong>CIF価格（Cost + Insurance + Freight）</strong>です。</p>
+          <p style="text-align:center;font-size:1rem;font-weight:700;color:var(--primary);margin:10px 0">課税価格（CIF） = FOB価格 + 保険料 + 運賃</p>
+          <ul>
+            <li><strong>FOB価格（本船甲板渡し価格）：</strong>輸出国の本船に積み込む時点の価格</li>
+            <li><strong>保険料：</strong>輸送中の保険の費用</li>
+            <li><strong>運賃：</strong>輸出港から輸入港までの輸送費用</li>
+          </ul>
+
+          <h4>為替換算</h4>
+          <p>外貨建て取引の場合、<strong>輸入申告の日の属する週の前々週の最終日のTTB（電信買相場）</strong>（税関公示レート）で円換算します。試験では「税関公示レート」という言葉で出題されることが多いです。</p>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 例題①：基本的なCIF計算</div>
+            <p>条件：FOB価格 USD 10,000 / 保険料 USD 50 / 運賃 USD 500 / 税関公示レート 1USD = 150円</p>
+            <p>計算：(10,000 + 50 + 500) × 150 = 10,550 × 150 = <strong>1,582,500円</strong></p>
+            <p>関税率5%なら：1,582,500 × 5% = 79,125円 → <strong>79,100円</strong>（百円未満切り捨て）</p>
+          </div>
+
+          <h4>課税価格への加算要素</h4>
+          <table class="learn-table">
+            <tr><th>加算すべきもの</th><th>具体例</th></tr>
+            <tr><td>仲介手数料（買付手数料以外）</td><td>売手が受け取る委託販売手数料</td></tr>
+            <tr><td>輸入者負担の梱包費用</td><td>特別な梱包を輸入者が手配・負担した費用</td></tr>
+            <tr><td>輸入者負担のコンテナ費用</td><td>コンテナのリース料等</td></tr>
+            <tr><td>特許権等の使用料</td><td>貨物に組み込まれた技術の使用料</td></tr>
+            <tr><td>輸入者が無償提供した素材等の価値</td><td>輸入者が原料を無償提供して製造させた場合</td></tr>
+          </table>
+
+          <h4>課税価格から控除できるもの</h4>
+          <table class="learn-table">
+            <tr><th>控除できるもの</th><th>条件</th></tr>
+            <tr><td>輸入港到着後の運賃</td><td>CIF後の国内輸送費</td></tr>
+            <tr><td>輸入港到着後の保険料</td><td>国内配送の保険</td></tr>
+            <tr><td>輸入後の据付・組立費用</td><td>明確に区分できる場合</td></tr>
+          </table>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 例題②：加算要素あり</div>
+            <p>条件：FOB価格 USD 5,000 / 委託販売手数料 USD 300（加算対象）/ 運賃 USD 200 / 保険料 USD 30 / レート 1USD = 150円</p>
+            <p>計算：(5,000 + 300 + 200 + 30) × 150 = 5,530 × 150 = <strong>829,500円</strong></p>
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 計算の注意点</div>
+            ①外貨建てはすべて円換算してから合計する。②関税額の計算後、<strong>百円未満は切り捨て</strong>。③課税価格自体は<strong>円未満切り捨て</strong>。④「買付手数料」は加算不要だが「販売手数料」は加算必要 — この区別が試験頻出！
+          </div>
+
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">計算問題の鉄則は「まず円換算→CIF計算→加算要素を足す→税率を掛ける→百円未満切り捨て」という手順を体に染み込ませること！</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 課税価格の計算問題</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-2-6" onclick="markDone('2-6')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 2-7 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('2-7')">
+          <div class="learn-sec-check" id="check-2-7">○</div>
+          <span>2-7 よく出る条文と過去問の傾向</span>
+          <span class="chevron" id="sec-chevron-2-7">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-2-7">
+          <h4>関税法 頻出条文ランキング</h4>
+          <ol class="priority-list">
+            <li><strong>第2条（定義）：</strong>輸入・輸出・外国貨物・内国貨物の定義。毎年出題。</li>
+            <li><strong>第67条（輸出入の申告）：</strong>申告手続きの基本規定。手続きの順番・要件が問われる。</li>
+            <li><strong>第73条（輸入許可前引取り）：</strong>BP制度。担保提供の要件・手続きが頻出。</li>
+            <li><strong>第29〜62条（保税地域関連）：</strong>5種類の比較・蔵置期間・できること。毎年出題。</li>
+            <li><strong>第69条の2（輸入禁制品）：</strong>輸入してはならない貨物の一覧。正誤問題で頻出。</li>
+            <li><strong>第77条（関税の納付）：</strong>納付時期・方法。特例輸入者制度との違いも出題。</li>
+            <li><strong>第68条（添付書類）：</strong>申告時の必要書類。「省略できる場合」が問われる。</li>
+          </ol>
+
+          <h4>輸入してはならない貨物（第69条の2）の一覧</h4>
+          <ul>
+            <li>① 麻薬及び向精神薬、大麻等</li>
+            <li>② けん銃等の火器・その部品・実包</li>
+            <li>③ 爆発物・火薬類</li>
+            <li>④ 化学兵器の原材料となる物質</li>
+            <li>⑤ 感染症の病原体等</li>
+            <li>⑥ 貨幣・紙幣・銀行券・有価証券の偽造品・変造品</li>
+            <li>⑦ 公安または風俗を害すべき書籍・図面・映画・情報記録媒体等</li>
+            <li>⑧ 不正競争防止法に違反する物品</li>
+            <li>⑨ 特許権・意匠権・商標権・著作権等を侵害する物品</li>
+          </ul>
+
+          <h4>過去問の出題パターン</h4>
+          <table class="learn-table">
+            <tr><th>出題形式</th><th>例</th></tr>
+            <tr><td>正誤問題（〇×）</td><td>「指定保税地域の蔵置期間は2ヶ月である。」→✗（1ヶ月）</td></tr>
+            <tr><td>穴埋め問題（選択肢）</td><td>「輸入とは外国から本邦に到着した（　）を引き取ることをいう。」→外国貨物</td></tr>
+            <tr><td>計算問題</td><td>「次の条件でCIF価格と関税額を求めよ。」</td></tr>
+            <tr><td>手続き問題（順序）</td><td>「輸入手続きの正しい順序を選べ。」</td></tr>
+          </table>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 過去問活用法</div>
+            過去問5年分を解くと、<strong>同じ条文から繰り返し出題</strong>されているのがわかります。頻出条文を重点的に学習し、出題形式を把握することが合格への最短ルートです。
+          </div>
+
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">過去問を解くときは「なぜその答えになるか」を条文で確認することが大切！答え合わせで終わらず、必ず条文に戻る習慣をつけましょう。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 問題集で練習</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 条文を参照</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-2-7" onclick="markDone('2-7')">✓ 読了にする</button>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- 第3章 -->
+  <!-- ====== 第3章 ====== -->
   <div class="learn-chapter">
     <div class="learn-chapter-header" onclick="toggleChapter('ch3')">
       <span>第3章 通関業法</span>
-      <span class="learn-ch-num" id="ch3-progress">0/4</span>
+      <span class="learn-ch-num" id="ch3-progress">0/5</span>
       <span id="ch3-chevron">▼</span>
     </div>
     <div class="learn-chapter-body" id="ch3-body">
@@ -812,24 +1229,37 @@
           <span class="chevron" id="sec-chevron-3-1">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-3-1">
-          <h4>目的（第1条）</h4>
-          <p>通関業法は、通関業を営む者についてその<strong>許可及び監督等に関する制度</strong>を定め、その業務の<strong>適正な運営を確保</strong>することにより、関税法等の適正な執行に資するとともに、<strong>輸出入貿易の公正な発展</strong>に寄与することを目的とする。</p>
-          <h4>通関業とは</h4>
-          <p>他人の依頼を受けて、税関に対して行う輸出入の申告・申請・不服申立て等の業務のことです。<strong>有償・無償を問わず</strong>、他人のために行う申告等の行為が通関業に該当します。</p>
-          <h4>通関業の種類</h4>
-          <ul>
-            <li>輸出申告・輸入申告の代理</li>
-            <li>関税等の過誤納金の還付請求</li>
-            <li>不服申立ての代理</li>
-            <li>その他税関手続き全般の代行</li>
-          </ul>
+          <h4>目的（第1条）— 条文全文</h4>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 条文（通関業法第1条）</div>
+            「この法律は、通関業を営む者についてその<strong>許可及び監督等に関する制度</strong>を定め、その業務の<strong>適正な運営を確保</strong>することにより、<strong>関税法等の適正な執行</strong>に資するとともに、<strong>輸出入貿易の公正な発展</strong>に寄与することを目的とする。」
+          </div>
+
+          <h4>キーワード解説</h4>
+          <table class="learn-table">
+            <tr><th>キーワード</th><th>意味・背景</th></tr>
+            <tr><td>許可及び監督</td><td>通関業者は無許可では営業できない。税関長による監督を受ける</td></tr>
+            <tr><td>適正な運営を確保</td><td>不正な申告・業務の質の低下を防ぐ</td></tr>
+            <tr><td>関税法等の適正な執行</td><td>通関業者が適切に機能することで関税法が正しく運用される</td></tr>
+            <tr><td>輸出入貿易の公正な発展</td><td>不当競争なく、貿易全体の発展に寄与する</td></tr>
+          </table>
+
+          <h4>通関業とは何か</h4>
+          <p>他人の依頼を受けて、税関に対して行う輸出入の申告・申請・不服申立て等の業務のこと。<strong>有償・無償を問わず</strong>、他人のために行う申告等の行為が通関業に該当します。</p>
+          <p>ただし、自社の貨物を自分で申告する場合は「通関業」ではないため許可は不要です（自社通関）。</p>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 穴埋め頻出</div>
+            第1条の4つのキーワード「<strong>許可及び監督</strong>」「<strong>適正な運営を確保</strong>」「<strong>関税法等の適正な執行</strong>」「<strong>輸出入貿易の公正な発展</strong>」は穴埋め問題で頻出。語順も含めて正確に覚えること。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">目的条文のキーワードは「<strong>許可及び監督</strong>」「<strong>適正な運営の確保</strong>」「<strong>輸出入貿易の公正な発展</strong>」の3つです！そのまま穴埋め問題で出ますよ。</div>
+            <div class="learn-bubble">「有償・無償を問わず」という点も覚えておきましょう。友人の会社のために無料で通関業務を行う場合も、通関業の許可が必要です！</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関業法の問題を解く</button>
-            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 法令を参照</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 条文を参照</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関業法の問題</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-3-1" onclick="markDone('3-1')">✓ 読了にする</button>
         </div>
@@ -839,33 +1269,64 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('3-2')">
           <div class="learn-sec-check" id="check-3-2">○</div>
-          <span>3-2 通関業の許可制度</span>
+          <span>3-2 通関業許可の要件（詳細）</span>
           <span class="chevron" id="sec-chevron-3-2">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-3-2">
-          <h4>許可の基本ルール</h4>
+          <h4>許可の基本ルール（第3条）</h4>
           <ul>
             <li><strong>許可権者：</strong>税関長</li>
             <li><strong>許可の単位：</strong>税関官署ごとに許可が必要（原則）</li>
-            <li><strong>許可の有効期限：</strong>なし（ただし定期的な審査あり）</li>
+            <li><strong>許可の有効期間：</strong>なし（ただし定期的な審査がある）</li>
           </ul>
-          <h4>主な欠格事由（許可を受けられない場合）</h4>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例：複数の税関で営業する場合</div>
+            A社が横浜税関と成田空港税関（東京税関管轄）の両方で通関業を行いたい場合：<br>
+            → 横浜税関長の許可 + 東京税関長の許可 の両方が必要<br>
+            ※ 同一税関の管轄内なら複数の営業所でも一括申請可能
+          </div>
+
+          <h4>許可の審査基準</h4>
           <ul>
-            <li>禁錮以上の刑に処せられ2年を経過していない者</li>
-            <li>通関業法・関税法等違反で刑に処せられ2年を経過していない者</li>
-            <li>暴力団員等</li>
-            <li>通関業の許可を取り消されて2年を経過していない者</li>
-            <li>法人でその役員が欠格事由に該当する者</li>
+            <li>通関業を適正・確実に行うことができる<strong>経理的基礎</strong>があること</li>
+            <li>通関業務を誠実に遂行する<strong>能力</strong>があること</li>
+            <li><strong>欠格事由</strong>に該当しないこと</li>
           </ul>
-          <h4>許可の承継・変更</h4>
-          <p>合併・分割・相続の場合、一定の要件を満たせば許可の承継が認められます。営業区域の拡大には新たな許可申請が必要です。</p>
+
+          <h4>主な欠格事由（第6条）</h4>
+          <table class="learn-table">
+            <tr><th>欠格事由</th><th>期間</th></tr>
+            <tr><td>禁固以上の刑に処せられた者</td><td>刑の執行終了・免除から2年未満</td></tr>
+            <tr><td>通関業法・関税法等違反で罰金刑</td><td>刑の執行終了から2年未満</td></tr>
+            <tr><td>通関業の許可を取り消された者</td><td>取消しから2年未満</td></tr>
+            <tr><td>暴力団員等</td><td>該当する間</td></tr>
+            <tr><td>法人でその役員が上記に該当</td><td>該当する間</td></tr>
+            <tr><td>未成年者</td><td>法定代理人が欠格事由に該当する場合</td></tr>
+          </table>
+
+          <h4>許可申請の主な添付書類</h4>
+          <ul>
+            <li>許可申請書（所定様式）</li>
+            <li>事業計画書（通関業務の予定量・体制等）</li>
+            <li>定款（法人の場合）</li>
+            <li>登記事項証明書（法人の場合）</li>
+            <li>財産・収支の状況を示す書類（直近の決算書等）</li>
+            <li>役員・使用人の履歴書・誓約書</li>
+          </ul>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 「2年」という数字</div>
+            欠格事由の多くに「<strong>2年</strong>」という期間が付きます。この数字は試験頻出！「1年ではなく2年」と正確に覚えること。また、法人の場合は役員が欠格事由に該当するだけで、法人全体が許可を受けられない点も重要。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">許可の「単位」が重要！原則は<strong>税関ごと</strong>に許可を取る必要があります。欠格事由の「2年」という数字は試験頻出です。</div>
+            <div class="learn-bubble">「許可の単位は税関官署ごと」が最頻出！「日本全国どこでも通関できる1つの許可」はありません。税関ごとに許可を取る必要があります。</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 許可制度の問題を解く</button>
-            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第3条を参照</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 許可制度の問題</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第3条・第6条</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-3-2" onclick="markDone('3-2')">✓ 読了にする</button>
         </div>
@@ -875,28 +1336,45 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('3-3')">
           <div class="learn-sec-check" id="check-3-3">○</div>
-          <span>3-3 通関士の資格と役割</span>
+          <span>3-3 通関士になるまでのステップ</span>
           <span class="chevron" id="sec-chevron-3-3">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-3-3">
-          <h4>通関士になるには</h4>
+          <h4>通関士になるための流れ</h4>
+          <div class="learn-flow">
+            <div class="learn-flow-step"><div class="learn-flow-num">1</div><div><strong>通関士試験の受験・合格</strong>：毎年10月実施。合格後「通関士試験合格者」の地位を取得（資格は失効しない）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">2</div><div><strong>通関業者への就職</strong>：通関業の許可を持つ会社に就職・転職。通関士は独立開業できない（従業員資格）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">3</div><div><strong>通関業者が税関長へ確認申請</strong>：通関業者が「この人を通関士として従事させたい」と申請。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">4</div><div><strong>税関長による確認</strong>：欠格事由がないかを確認。問題なければ確認通知が交付される。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">5</div><div><strong>通関士として業務開始</strong>：申告書の審査・記名等の通関士業務が可能になる。</div></div>
+          </div>
+
+          <h4>通関士の確認制度のポイント</h4>
           <ul>
-            <li>通関士試験に合格する</li>
-            <li>通関業者に雇用される（独立開業はできない）</li>
-            <li>通関業者が税関長に<strong>確認申請</strong>を行う</li>
-            <li>税関長の確認を受けた後、通関士として業務を開始</li>
+            <li>申請するのは<strong>通関業者</strong>（個人が自分で申請するわけではない）</li>
+            <li>試験合格後、何年経っても合格資格は<strong>失効しない</strong></li>
+            <li>一度確認を受けた後でも、欠格事由に該当すれば確認が取り消される</li>
+            <li>転職の場合：新しい通関業者が再度確認申請が必要</li>
           </ul>
-          <h4>通関士の主な役割（第19条：通関士審査）</h4>
-          <p>通関業者が作成した申告書等について、その<strong>内容を審査し、記名</strong>しなければならない。通関士の確認（審査・記名）は輸出入申告の重要なチェック機能です。</p>
-          <h4>通関士設置義務（第13条）</h4>
-          <p>通関業者は<strong>営業所ごとに通関士を置かなければならない</strong>。ただし、当該営業所における通関業務の量が少ない場合等は例外あり。</p>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例</div>
+            Aさんが通関士試験に合格→B通関業者に就職→B社がAさんを通関士として税関長に確認申請→確認通知を受け取る→AさんはB社で通関士として勤務開始<br>
+            ※後でAさんがC通関業者に転職した場合は、C社が改めて確認申請する必要がある
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            通関士は<strong>「登録」ではなく「確認」制度</strong>です（弁護士・税理士は登録制）。申請するのは通関業者であり、本人ではありません。また、通関士は独立して事務所を開けません。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">通関士の最重要業務は「<strong>審査して記名する</strong>」こと！通関士は従業員資格なので、独立して事務所を開業することはできません。</div>
-          </div>
-          <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関士の問題を解く</button>
-            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 通関士を調べる</button>
+            <div class="learn-bubble">試験合格後すぐに通関士になれるわけではありません。通関業者への就職→確認申請→確認通知のステップが必要です。この流れを正確に覚えましょう！</div>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-3-3" onclick="markDone('3-3')">✓ 読了にする</button>
         </div>
@@ -906,45 +1384,123 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('3-4')">
           <div class="learn-sec-check" id="check-3-4">○</div>
-          <span>3-4 禁止行為・義務</span>
+          <span>3-4 通関士の具体的な業務内容</span>
           <span class="chevron" id="sec-chevron-3-4">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-3-4">
-          <h4>禁止行為</h4>
+          <h4>通関士の最重要業務：審査・記名（第19条）</h4>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 条文（第19条）</div>
+            「通関士は、通関業者が税関官署に提出すべき申告書・申請書等の書類について、その<strong>内容を審査し、これらの書類に記名</strong>しなければならない。」
+          </div>
+          <p>この「審査して記名する」行為が通関士の最も重要な職責です。記名することで通関士が内容の正確性を保証したことになります。</p>
+
+          <h4>通関士の主な業務一覧</h4>
           <table class="learn-table">
-            <tr><th>禁止行為</th><th>内容</th></tr>
-            <tr><td>名義貸しの禁止（第34条）</td><td>自己の名義を他人に使用させて通関業を営ませること</td></tr>
-            <tr><td>不正行為の禁止</td><td>不正の手段により輸出入の許可・承認等を得ること</td></tr>
-            <tr><td>特定荷主との不正な利益供与等の禁止</td><td>特定の荷主に特別の利益を与えること</td></tr>
+            <tr><th>業務</th><th>内容</th></tr>
+            <tr><td>申告書の審査・記名</td><td>輸出入申告書の内容審査と記名（最重要）</td></tr>
+            <tr><td>通関書類の作成</td><td>輸出入申告書・各種申請書の作成</td></tr>
+            <tr><td>税関への申告代理</td><td>荷主に代わって税関に申告・申請を行う</td></tr>
+            <tr><td>税関折衝・照会対応</td><td>税関の審査・疑義照会への対応</td></tr>
+            <tr><td>検査の立会い</td><td>税関貨物検査への立会い</td></tr>
+            <tr><td>不服申立て代理</td><td>税関の処分に不服がある場合の申立て</td></tr>
+            <tr><td>コンサルティング</td><td>EPA活用・輸出規制・HS分類の助言</td></tr>
           </table>
-          <h4>主な義務</h4>
-          <table class="learn-table">
-            <tr><th>義務</th><th>内容</th></tr>
-            <tr><td>秘密保持義務（第31条）</td><td>業務上知り得た秘密を漏らしてはならない。<strong>退職後も継続</strong></td></tr>
-            <tr><td>料金掲示義務（第28条）</td><td>料金表を営業所に掲示しなければならない</td></tr>
-            <tr><td>帳簿の備え付け（第32条）</td><td>通関業務に関する帳簿を作成・保存しなければならない</td></tr>
-            <tr><td>書類の閲覧（第33条）</td><td>荷主の求めに応じて申告書等を閲覧させる義務</td></tr>
-          </table>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 実際の業務の流れ（輸入の場合）</div>
+            ①荷主A社からインボイス・B/L等を受領<br>
+            ②HSコードを確認し、適用税率・関税額を計算<br>
+            ③輸入申告書をNACCSで作成<br>
+            ④<strong>通関士が内容を審査し記名</strong><br>
+            ⑤NACCSで申告送信<br>
+            ⑥税関の審査・疑義照会への対応<br>
+            ⑦輸入許可後、A社に許可書を送付・引取り手配
+          </div>
+
+          <h4>通関士設置義務（第13条）</h4>
+          <p>通関業者は<strong>営業所ごとに通関士を設置しなければならない</strong>。ただし以下の場合は例外：</p>
+          <ul>
+            <li>当該営業所における通関業務の量が少ない場合</li>
+            <li>通関業者が自ら通関業務を行う場合（個人事業主等）</li>
+          </ul>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 「記名」と「署名」の違い</div>
+            通関士は申告書に「<strong>記名</strong>」します。記名とはゴム印・スタンプなど本人を示す方法での記名です（自署は不要）。この「記名」という言葉が正誤問題で問われることがあります。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">秘密保持義務は「<strong>退職後も継続する</strong>」点が最頻出ポイント！名義貸し禁止と合わせて必ず覚えましょう。</div>
+            <div class="learn-bubble">通関士の仕事は「申告書を作って記名するだけ」ではありません。税関との折衝、EPA活用のアドバイス、輸出規制の確認など、貿易のプロとして幅広いサービスを提供します！</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関業法の問題を解く</button>
-            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第31条を参照</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関士業務の問題</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-3-4" onclick="markDone('3-4')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 3-5 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('3-5')">
+          <div class="learn-sec-check" id="check-3-5">○</div>
+          <span>3-5 禁止行為・監督処分の種類</span>
+          <span class="chevron" id="sec-chevron-3-5">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-3-5">
+          <h4>主な禁止行為</h4>
+          <table class="learn-table">
+            <tr><th>禁止行為（条文）</th><th>内容</th><th>具体例</th></tr>
+            <tr><td>名義貸しの禁止（第34条）</td><td>自己の名義を他人に使用させて通関業を営ませること</td><td>許可のないC社がD通関業者の名前を借りて申告を行う</td></tr>
+            <tr><td>不正手段による許可取得の禁止</td><td>虚偽申請・書類偽造で許可を得ること</td><td>欠格事由を隠して許可申請する</td></tr>
+            <tr><td>特定荷主への不正な利益供与禁止</td><td>特定の荷主に対し不当な優遇・差別的扱い</td><td>特定企業の通関を他より安い料金で行う不公正取引</td></tr>
+            <tr><td>虚偽申告の禁止</td><td>税関への虚偽の申告・証明・報告</td><td>価格を過少申告して関税を少なくする</td></tr>
+          </table>
+
+          <h4>主な義務と違反した場合</h4>
+          <table class="learn-table">
+            <tr><th>義務（条文）</th><th>内容</th><th>違反の影響</th></tr>
+            <tr><td>秘密保持義務（第31条）</td><td>業務上知り得た秘密を漏らしてはならない。<strong>退職後も継続</strong></td><td>罰則（1年以下の懲役・50万円以下の罰金）</td></tr>
+            <tr><td>料金掲示義務（第28条）</td><td>通関業務の料金表を営業所に掲示</td><td>業務改善命令の対象</td></tr>
+            <tr><td>帳簿の備え付け（第32条）</td><td>通関業務に関する帳簿を作成・5年間保存</td><td>業務改善命令・業務停止の対象</td></tr>
+            <tr><td>書類の閲覧（第33条）</td><td>荷主の求めに応じて申告書等を閲覧させる</td><td>業務改善命令の対象</td></tr>
+          </table>
+
+          <h4>監督処分の3段階</h4>
+          <div class="learn-flow">
+            <div class="learn-flow-step"><div class="learn-flow-num">1</div><div><strong>業務改善命令</strong>（最も軽い）：業務の改善を命じる。軽微な違反や初回の場合に適用。</div></div>
+            <div class="learn-flow-arrow">↓ 違反が重い・繰り返す場合</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">2</div><div><strong>業務停止</strong>（中程度）：一定期間、通関業務の全部または一部を停止。6ヶ月以内。</div></div>
+            <div class="learn-flow-arrow">↓ 最も重大な違反の場合</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">3</div><div><strong>許可の取消し</strong>（最も重い）：通関業の許可を取り消す。取消し後2年は再取得不可。</div></div>
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 秘密保持義務の「退職後も継続」</div>
+            秘密保持義務は<strong>在職中だけでなく退職後も継続</strong>します。これは最頻出のポイント。「退職したら秘密を話してもよい」は誤り。また、違反した場合は刑事罰（懲役または罰金）の対象になります。
+          </div>
+
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">監督処分の3段階「改善命令→業務停止→許可取消し」を覚えましょう。試験では「どの処分が最も重いか」「どの違反にどの処分か」を問う問題が出ます！</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 通関業法の問題</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 第31条を参照</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-3-5" onclick="markDone('3-5')">✓ 読了にする</button>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- 第4章 -->
+  <!-- ====== 第4章 ====== -->
   <div class="learn-chapter">
     <div class="learn-chapter-header" onclick="toggleChapter('ch4')">
       <span>第4章 外国為替及び外国貿易法（外為法）</span>
-      <span class="learn-ch-num" id="ch4-progress">0/3</span>
+      <span class="learn-ch-num" id="ch4-progress">0/4</span>
       <span id="ch4-chevron">▼</span>
     </div>
     <div class="learn-chapter-body" id="ch4-body">
@@ -957,23 +1513,41 @@
           <span class="chevron" id="sec-chevron-4-1">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-4-1">
-          <h4>目的（第1条）</h4>
-          <p>対外取引の<strong>正常な発展</strong>及び我が国又は<strong>国際社会の平和と安全の維持</strong>を目的とする。</p>
-          <h4>基本原則：原則自由・例外規制</h4>
-          <p>外為法の大原則は「<strong>対外取引は原則として自由</strong>」です。ただし、国際平和・安全保障上の観点から特定の取引・品目については規制（許可制）を設けています。</p>
-          <h4>所管省庁</h4>
+          <h4>目的（第1条）— 条文</h4>
+          <div class="learn-example">
+            <div class="learn-example-title">📋 条文（外為法第1条）</div>
+            「この法律は、外国為替、外国貿易その他の対外取引が<strong>自由に行われること</strong>を基本とし、対外取引に対し必要最小限の管理又は調整を行うことにより、<strong>対外取引の正常な発展</strong>及び我が国又は<strong>国際社会の平和と安全の維持</strong>を図ることを目的とする。」
+          </div>
+
+          <h4>大原則：原則自由・例外規制</h4>
+          <p>外為法の根本的な考え方は「<strong>対外取引は原則として自由</strong>」です。貿易・資本取引・為替取引はすべて自由が原則。ただし、<strong>国際平和・安全保障上の理由</strong>から特定の取引・品目については例外的に規制（許可制）を設けています。</p>
+
+          <h4>所管省庁の分担</h4>
           <table class="learn-table">
-            <tr><th>省庁</th><th>担当分野</th></tr>
-            <tr><td>財務省</td><td>資本取引・外国為替・支払い規制</td></tr>
-            <tr><td>経済産業省</td><td>貨物・技術の輸出入規制（安全保障貿易管理）</td></tr>
+            <tr><th>省庁</th><th>担当分野</th><th>主な規制</th></tr>
+            <tr><td>財務省</td><td>資本取引・外国為替・支払い</td><td>資本規制・送金規制</td></tr>
+            <tr><td>経済産業省</td><td>貨物・技術の輸出入規制</td><td>輸出許可制度・キャッチオール規制</td></tr>
           </table>
+
+          <h4>外為法の体系</h4>
+          <ul>
+            <li><strong>第1章 総則</strong>：目的・定義・基本方針</li>
+            <li><strong>第6章 貿易管理</strong>：輸出入の許可・承認制度（第47〜53条）</li>
+            <li><strong>第8章 罰則</strong>：違反に対する刑事罰</li>
+          </ul>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            「<strong>原則自由・例外規制</strong>」が外為法の大原則。この考え方が条文の構造に反映されています。規制は「必要最小限」でなければならないという趣旨も覚えておきましょう。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">「<strong>原則自由・例外規制</strong>」が外為法の大原則です！この考え方を頭に置いて学習すると、個別の規制の意味が理解しやすくなりますよ。</div>
+            <div class="learn-bubble">関税法は輸出入「手続き」の法律、通関業法は通関業者の「資格・規制」の法律、外為法は「安全保障」の観点から貿易を規制する法律です。それぞれの目的の違いを意識しましょう！</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題を解く</button>
-            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 法令を参照</button>
+            <button class="learn-link-btn" onclick="goToTab('laws')">⚖️ 条文を参照</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-4-1" onclick="markDone('4-1')">✓ 読了にする</button>
         </div>
@@ -983,30 +1557,56 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('4-2')">
           <div class="learn-sec-check" id="check-4-2">○</div>
-          <span>4-2 輸出規制の仕組み</span>
+          <span>4-2 輸出規制の具体的な手順</span>
           <span class="chevron" id="sec-chevron-4-2">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-4-2">
-          <h4>輸出規制の根拠</h4>
+          <h4>輸出規制の根拠法令</h4>
           <ul>
-            <li>外為法第48条 + 輸出貿易管理令</li>
-            <li>許可権者：<strong>経済産業大臣</strong></li>
-            <li>目的：大量破壊兵器・通常兵器等の拡散防止</li>
+            <li><strong>外為法第48条：</strong>特定の貨物・技術の輸出には経済産業大臣の許可が必要と規定</li>
+            <li><strong>輸出貿易管理令：</strong>規制対象品目の具体的なリスト（別表第1）を規定</li>
+            <li><strong>外国為替令：</strong>技術の提供に関する規制</li>
           </ul>
-          <h4>規制の流れ</h4>
+
+          <h4>輸出規制の確認手順（フロー）</h4>
+          <div class="learn-flow">
+            <div class="learn-flow-step"><div class="learn-flow-num">1</div><div><strong>品目の確認</strong>：輸出しようとする貨物がリスト規制対象か確認。輸出貿易管理令別表第1を参照（非該当確認も可能）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">2</div><div><strong>仕向地の確認</strong>：輸出先の国・地域が禁輸対象でないか確認（北朝鮮等への禁輸）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">3</div><div><strong>需要者・用途の確認</strong>：取引先が懸念ある企業でないか、用途が問題ないか確認（EUC：End User Check）。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">4</div><div><strong>許可申請（必要な場合）</strong>：経済産業省地方経済産業局に輸出許可申請書を提出。審査期間は通常2〜4週間。</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">5</div><div><strong>輸出許可証の取得・提示</strong>：許可証を税関に提示。関税法上の輸出申告と合わせて手続き。</div></div>
+          </div>
+
+          <h4>許可が不要な場合（輸出令第4条）</h4>
           <ul>
-            <li>① 輸出しようとする貨物が規制対象か確認（品目分類）</li>
-            <li>② 規制対象であれば経済産業大臣へ許可申請</li>
-            <li>③ 許可取得後に輸出可能（許可なしでは輸出不可）</li>
+            <li>規制対象品目だが、数量・金額が少額基準以下の場合</li>
+            <li>ホワイト国（グループA）向けの特定品目の輸出（一部）</li>
+            <li>個人的使用・見本品等の特例</li>
           </ul>
-          <h4>罰則</h4>
-          <p>輸出規制違反は<strong>刑事罰（懲役・罰金）</strong>の対象。法人への両罰規定もあり。近年、違反事例に対する取り締まりが強化されています。</p>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例</div>
+            日本の電子部品メーカーが精密な半導体をイランの企業に輸出しようとする場合：<br>
+            ①半導体が輸出貿易管理令別表第1に掲載されている→リスト規制対象<br>
+            ②イランは懸念国に該当<br>
+            ③経済産業省に輸出許可申請→審査（数週間）→許可取得後に輸出可能
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！</div>
+            許可が下りるまで<strong>数週間かかる</strong>ことがあります。規制品を含む輸出の予定がある場合は、早めに品目確認・申請手続きを開始することが実務上の鉄則です。「知らなかった」は免責にならない！
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">許可なしで規制品を輸出すると重い罰則があります！輸出前に必ず品目確認→必要なら許可申請の手順を踏みましょう。</div>
+            <div class="learn-bubble">輸出規制は「確認→申請→許可→輸出」のフローが基本。許可を取らずに輸出してしまうと重大な刑事罰を受けます。焦っていても必ず確認しましょう！</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題を解く</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題</button>
             <button class="learn-link-btn" onclick="goToTab('glossary')">📖 輸出規制を調べる</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-4-2" onclick="markDone('4-2')">✓ 読了にする</button>
@@ -1017,34 +1617,121 @@
       <div class="learn-section">
         <div class="learn-section-header" onclick="toggleSection('4-3')">
           <div class="learn-sec-check" id="check-4-3">○</div>
-          <span>4-3 戦略物資・キャッチオール規制</span>
+          <span>4-3 戦略物資・キャッチオール規制（具体例付き）</span>
           <span class="chevron" id="sec-chevron-4-3">▼</span>
         </div>
         <div class="learn-section-body" id="sec-body-4-3">
           <h4>戦略物資とは</h4>
-          <p>軍事転用が可能な機微な貨物・技術のこと。武器、核・生物・化学兵器関連品、ミサイル関連品等が該当します。</p>
-          <h4>規制の2種類</h4>
+          <p>軍事転用が可能な機微な貨物・技術の総称。国際的な安全保障体制（ワッセナー・アレンジメント等）に基づいて日本が管理しています。</p>
+
+          <h4>リスト規制対象の品目例</h4>
           <table class="learn-table">
-            <tr><th>種類</th><th>内容</th></tr>
-            <tr><td><strong>リスト規制</strong></td><td>輸出貿易管理令別表第1に掲載された品目。用途・仕向先に関わらず許可が必要</td></tr>
-            <tr><td><strong>キャッチオール規制</strong>（補完的輸出規制）</td><td>リスト規制対象外の貨物でも、大量破壊兵器等への転用の懸念がある場合に適用</td></tr>
+            <tr><th>カテゴリ</th><th>具体例</th></tr>
+            <tr><td>武器・軍用品</td><td>銃・弾薬・軍用車両・軍用航空機</td></tr>
+            <tr><td>大量破壊兵器関連</td><td>核関連材料・化学兵器原料・生物剤</td></tr>
+            <tr><td>電子・半導体</td><td>高性能CPU・FPGA・暗号関連機器</td></tr>
+            <tr><td>通信・情報処理</td><td>軍用通信機器・暗号装置・レーダー</td></tr>
+            <tr><td>センサー・レーザー</td><td>赤外線センサー・高出力レーザー</td></tr>
+            <tr><td>材料・素材</td><td>炭素繊維・超高強度合金・特殊金属</td></tr>
+            <tr><td>工作機械</td><td>精密5軸加工機・超精密旋盤</td></tr>
+            <tr><td>宇宙・航空</td><td>ロケット関連・航空機エンジン</td></tr>
           </table>
-          <h4>キャッチオール規制のポイント</h4>
-          <ul>
-            <li>リスト規制対象外でも「引っかかる」可能性あり</li>
-            <li><strong>用途確認・需要者確認（EUC：End User Check）</strong>が重要</li>
-            <li>「懸念国」（大量破壊兵器の開発・製造等に関与するおそれのある国）への輸出には特に注意</li>
-            <li>輸出者は需要者から<strong>誓約書（EUC）</strong>を取得することが推奨される</li>
-          </ul>
+
+          <h4>規制の2種類：リスト規制 vs キャッチオール規制</h4>
+          <table class="learn-table">
+            <tr><th></th><th>リスト規制</th><th>キャッチオール規制</th></tr>
+            <tr><td>対象</td><td>輸出貿易管理令別表第1掲載品目</td><td>リスト規制対象外の貨物</td></tr>
+            <tr><td>適用条件</td><td>品目が該当すれば自動的に規制</td><td>大量破壊兵器等への転用の懸念がある場合</td></tr>
+            <tr><td>許可の要否</td><td>原則として許可必要</td><td>「おそれがある」と判断された場合に許可必要</td></tr>
+          </table>
+
+          <h4>キャッチオール規制の判断フロー</h4>
+          <div class="learn-flow">
+            <div class="learn-flow-step"><div class="learn-flow-num">1</div><div>輸出しようとする貨物が<strong>リスト規制対象か？</strong><br>→ YES：リスト規制で対応（別フロー）<br>→ NO：次へ</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">2</div><div>仕向地が<strong>地域要件に該当する国か？</strong>（北朝鮮・イラン等の特定地域）<br>→ YES：許可申請が必要<br>→ NO：次へ</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">3</div><div>取引に<strong>インフォーム（通知）</strong>があるか？（経産省から大量破壊兵器等への転用の疑いを通知される）<br>→ YES：許可申請が必要</div></div>
+            <div class="learn-flow-arrow">↓</div>
+            <div class="learn-flow-step"><div class="learn-flow-num">4</div><div><strong>自社の判断で懸念がある</strong>場合も許可申請が必要（know your customer）</div></div>
+          </div>
+
+          <h4>EUC（End User Check）の重要性</h4>
+          <p>取引先（最終需要者）が本当に申告通りの用途で使用するかを確認する手続き。需要者から<strong>誓約書（EUC）</strong>を取得し、用途・需要者を確認することが推奨されます。</p>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 具体例：キャッチオール規制が適用された事例</div>
+            一般的な工業用ポンプ（リスト規制外の民生品）を輸出しようとしたが、輸出先が化学兵器製造の疑惑がある企業だった場合→キャッチオール規制が適用され、輸出許可申請が必要になる。<br>
+            ※「ポンプは一般品だから大丈夫」は通用しない！
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 最頻出ポイント</div>
+            キャッチオール規制は「<strong>リスト外でも引っかかる</strong>」のが最大のポイント。一般的な民生品でも、用途・需要者に問題があれば規制対象になります。「知らなかった」では免責されません。
+          </div>
+
           <div class="learn-point">
             <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
-            <div class="learn-bubble">キャッチオール規制は「<strong>リスト外でも引っかかる</strong>」のがポイント！一般の工業製品でも転用の懸念があれば規制対象になります。EUCの取得習慣が大切です。</div>
+            <div class="learn-bubble">「自分の会社の製品は普通の工業品だから関係ない」と思っていると危険！どんな製品でも転用の疑いがあれば規制対象。輸出前のチェックを習慣にしましょう。</div>
           </div>
           <div class="learn-links">
-            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題を解く</button>
-            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 キャッチオール規制を調べる</button>
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題</button>
+            <button class="learn-link-btn" onclick="goToTab('glossary')">📖 戦略物資を調べる</button>
           </div>
           <button class="btn btn-primary learn-done-btn" id="done-btn-4-3" onclick="markDone('4-3')">✓ 読了にする</button>
+        </div>
+      </div>
+
+      <!-- 4-4 -->
+      <div class="learn-section">
+        <div class="learn-section-header" onclick="toggleSection('4-4')">
+          <div class="learn-sec-check" id="check-4-4">○</div>
+          <span>4-4 違反した場合の罰則</span>
+          <span class="chevron" id="sec-chevron-4-4">▼</span>
+        </div>
+        <div class="learn-section-body" id="sec-body-4-4">
+          <h4>外為法違反の刑事罰（第69条の6等）</h4>
+          <table class="learn-table">
+            <tr><th>違反行為</th><th>個人への罰則</th><th>法人への罰則（両罰規定）</th></tr>
+            <tr><td>無許可輸出・禁輸国への輸出</td><td>10年以下の懲役・1,000万円以下の罰金（または併科）</td><td>10億円以下の罰金</td></tr>
+            <tr><td>虚偽の申告・書類偽造</td><td>3年以下の懲役・100万円以下の罰金</td><td>1億円以下の罰金</td></tr>
+            <tr><td>輸出承認違反</td><td>5年以下の懲役・500万円以下の罰金</td><td>5億円以下の罰金</td></tr>
+          </table>
+
+          <h4>行政制裁</h4>
+          <ul>
+            <li><strong>輸出禁止処分：</strong>一定期間、特定の品目・地域への輸出が禁止される（最大3年）</li>
+            <li><strong>氏名・企業名の公表：</strong>違反企業の情報を経済産業省がウェブサイト等で公表（社会的制裁）</li>
+            <li><strong>再発防止措置命令：</strong>コンプライアンス体制の改善を命じる</li>
+          </ul>
+
+          <h4>違反した場合の実際の影響</h4>
+          <ul>
+            <li>刑事訴追・執行猶予や実刑判決のリスク</li>
+            <li>会社が輸出禁止処分を受ければ事業継続が困難に</li>
+            <li>企業名公表により、国内外の取引先・金融機関から信用を失う</li>
+            <li>米国・EUの輸出管理当局からも制裁・取引制限を受ける可能性</li>
+            <li>採用・融資・上場等にも悪影響</li>
+          </ul>
+
+          <div class="learn-example">
+            <div class="learn-example-title">📋 実際に起きた事例（参考）</div>
+            過去には、軍事転用可能な精密工作機械を無許可でロシアや特定国に輸出した企業・個人が逮捕・起訴された事例があります。「知らなかった」「担当者が勝手にやった」という主張は通らず、企業トップも責任を問われました。
+          </div>
+
+          <div class="learn-important">
+            <div class="learn-important-title">⭐ ここが重要！ 両罰規定</div>
+            外為法違反は<strong>個人だけでなく法人も処罰される</strong>（両罰規定）。会社としての罰金は個人への罰金より大幅に高額（最大10億円）。コンプライアンス体制の整備が企業にとって必須です。
+          </div>
+
+          <div class="learn-point">
+            <img src="/chara.png" class="learn-kanta-img" alt="関太先生">
+            <div class="learn-bubble">「10年以下の懲役・10億円以下の罰金」という数字は試験に出ます！外為法違反は関税法違反より罰則が重い場合があります。しっかり覚えておきましょう。</div>
+          </div>
+          <div class="learn-links">
+            <button class="learn-link-btn" onclick="goToTab('quiz')">📝 外為法の問題</button>
+          </div>
+          <button class="btn btn-primary learn-done-btn" id="done-btn-4-4" onclick="markDone('4-4')">✓ 読了にする</button>
         </div>
       </div>
 
@@ -1052,6 +1739,7 @@
   </div>
 
 </div>
+
 
 <!-- ===== AI CHAT ===== -->
 <div id="tab-ai" class="tab-content">
@@ -1900,12 +2588,12 @@ function escapeHtml(str) {
 }
 
 // ===== LEARN TAB =====
-const LEARN_SECTIONS = ['1-1','1-2','1-3','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','4-1','4-2','4-3'];
+const LEARN_SECTIONS = ['1-1','1-2','1-3','1-4','1-5','2-1','2-2','2-3','2-4','2-5','2-6','2-7','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4'];
 const LEARN_CHAPTERS = {
-  ch1: ['1-1','1-2','1-3'],
-  ch2: ['2-1','2-2','2-3','2-4','2-5'],
-  ch3: ['3-1','3-2','3-3','3-4'],
-  ch4: ['4-1','4-2','4-3']
+  ch1: ['1-1','1-2','1-3','1-4','1-5'],
+  ch2: ['2-1','2-2','2-3','2-4','2-5','2-6','2-7'],
+  ch3: ['3-1','3-2','3-3','3-4','3-5'],
+  ch4: ['4-1','4-2','4-3','4-4']
 };
 
 function toggleChapter(id) {
